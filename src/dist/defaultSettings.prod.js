@@ -1,0 +1,1 @@
+"use strict";module.exports={navTheme:"dark",primaryColor:"#1890FF"};

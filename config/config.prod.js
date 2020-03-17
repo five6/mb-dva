@@ -1,13 +1,18 @@
 
 // ref: https://umijs.org/config/
 
-import { YAML } from '@/utils/utils';
+import { YAML } from '../src/utils/utils';
+import { primaryColor } from './defaultSettings';
+
 
 export default {
   define: {
     API_PREFIX: 1,
   },
-  routes:  YAML(`${__dirname}/src/routes.yaml`),
+  theme: {
+    'primary-color': primaryColor,
+  },
+  routes:  YAML(`${__dirname}/routes.yaml`),
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {
@@ -27,4 +32,11 @@ export default {
       },
     }],
   ],
+  proxy: {
+    '/api/v1/weather': {
+      target: 'https://api.seniverse.com/',
+      changeOrigin: true,
+      pathRewrite: { '^/api/v1/weather': '/v3/weather' },
+    },
+  },
 }

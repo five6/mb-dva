@@ -1,0 +1,1 @@
+"use strict";var fs=require("fs"),path=require("path"),lessToJs=require("less-vars-to-js");module.exports=function(){var e=path.join(__dirname,"../src/themes/default.less");return lessToJs(fs.readFileSync(e,"utf8"))};

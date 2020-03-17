@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "umi dev",
+    "start": "cross-env MOCK=none PORT=8888 umi dev",
+    "start:prod": "cross-env MOCK=none PORT=8888 UMI_ENV=prod umi dev",
     "build": "umi build",
     "test": "umi test",
     "lint": "eslint {src,mock,tests}/**/*.{js,jsx} --fix",
@@ -9,8 +10,10 @@
   },
   "dependencies": {
     "antd": "^3.19.5",
+    "cross-env": "^7.0.2",
     "dva": "^2.6.0-beta.6",
     "js-yaml": "^3.13.1",
+    "less-vars-to-js": "^1.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
