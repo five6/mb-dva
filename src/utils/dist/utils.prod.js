@@ -1,0 +1,1 @@
+"use strict";var fs=require("fs"),yaml=require("js-yaml"),reg=/(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;function isUrl(r){return reg.test(r)}function YAML(r){var e=fs.readFileSync(r).toString();return yaml.load(e)}module.exports={isUrl:isUrl,YAML:YAML};
