@@ -1,6 +1,7 @@
 import styles from './index.css';
+import { connect } from 'dva';
 
-export default function() {
+const Products =({ dispatch, products }) => {
   return (
     <div className={styles.normal}>
       <div className={styles.welcome} />
@@ -15,3 +16,7 @@ export default function() {
     </div>
   );
 }
+
+export default connect(({ products }) => ({
+  products,
+}))(Products);

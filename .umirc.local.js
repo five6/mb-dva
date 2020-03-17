@@ -8,6 +8,16 @@ export default {
     API_PREFIX: 1,
   },
   routes:  YAML(`${__dirname}/src/routes.yaml`),
+  // routes: [
+  //   {
+  //     path: '/',
+  //     component: '../layouts/index',
+  //     routes: [
+  //       { path: '/', component: '../pages/index' },
+
+  //     ]
+  //   }
+  // ],
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {
@@ -26,5 +36,5 @@ export default {
         ],
       },
     }],
-  ],
+  ]
 }

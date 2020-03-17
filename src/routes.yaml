@@ -13,3 +13,4 @@
     - path: /blogs/:id
       name: blog-detail
       component: ./blogs/detail
+    - component: '404'
