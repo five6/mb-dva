@@ -1,1 +1,1 @@
-"use strict";
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.getRosMessage=getRosMessage;var code="X-MESSAGE-RESPONSE-CODE";function getRosMessage(e){var t,o=void 0===e?localStorage.getItem("".concat(code)):localStorage.getItem(e);try{t=JSON.parse(o)}catch(e){t=o}return t}
