@@ -1,10 +1,15 @@
 
+
 - path: /
-  name: homepage
-  component: ./index
-- path: /blogs
-  name: blogs
-  component: ./blogs/index
-- path: /blogs/:id
-  name: blog-detail
-  component: ./blogs/detail
+  name: layout
+  component: '../layouts/index'
+  routes:
+    - path: /
+      name: homepage
+      component: ./index
+    - path: /blogs
+      name: blogs
+      component: ./blogs/index
+    - path: /blogs/:id
+      name: blog-detail
+      component: ./blogs/detail
