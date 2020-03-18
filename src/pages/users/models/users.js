@@ -1,5 +1,4 @@
 import { queryUsers, queryCurrentUser} from '@/services/users';
-import { getCurrentUser } from '@/services/authorityService';
 
 export default {
   namespace: 'user',
@@ -38,6 +37,16 @@ export default {
       return {
         ...state,
         currentUser: user || {},
+      };
+    },
+    changeNotifyCount(state, action) {
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          notifyCount: action.payload.totalCount,
+          unreadCount: action.payload.unreadCount,
+        },
       };
     },
   },

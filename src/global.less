@@ -1,0 +1,181 @@
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+
+@COLOR_BLUE: #1E90FF;
+@COLOR_GRAY_BG: #373737;
+@COLOR_GRAY: rgba(45, 43, 43, 0.65) !important;
+@COLOR_WHITE: #FFFFFF;
+@COLOR_BLACK: #000000;
+@COLOR_TITLE: #6C6C6C;
+@COLOR_RED: #F5222D;
+@COLOR_GRAY_BORDER: #D9D9D9;
+@COLOR_GRAY_BG_2: #F5F5F5;
+@COLOR_GRAY_BTN_BG: rgba(157, 157, 157, .2);
+@COLOR_GRAY_BTN: #9D9D9D;
+@COLOR_BLUE_BTN_HOVER_BG: rgba(30, 144, 255, .2);
+@COLOR_BLUE_BTN_HOVER: @COLOR_BLUE;
+
+/** --------- Customer AntD Style --------- **/
+
+.ant-layout-header {
+  background: @COLOR_WHITE !important;
+  >.ant-menu-dark,
+  .ant-menu-dark .ant-menu-sub {
+    color: @COLOR_GRAY !important;
+    background: @COLOR_WHITE !important;
+  }
+  > .ant-menu-item {
+    background: transparent;
+    color: @COLOR_WHITE;
+  }
+  > .ant-menu-dark .ant-menu-item, .ant-menu-dark .ant-menu-item-group-title, .ant-menu-dark .ant-menu-item > a {
+    color: @COLOR_GRAY !important;
+  
+  }
+}
+
+.ant-table {
+  overflow-y: auto;
+}
+
+
+.ant-menu-dark,
+.ant-menu-dark .ant-menu-sub {
+  color: @COLOR_WHITE !important;
+}
+
+
+
+.ant-menu-dark .ant-menu-item > a,
+.ant-menu-submenu-title:hover {
+  color: inherit !important;
+}
+
+.ant-menu-dark .ant-menu-submenu.ant-menu-item,
+.ant-menu-dark .ant-menu-inline.ant-menu-sub .ant-menu-item {
+  color: @COLOR_BLACK !important;
+}
+
+.ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-open {
+  background: @COLOR_WHITE !important;
+  color: @COLOR_BLACK !important;
+}
+
+
+.ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-open.ant-menu-submenu-selected {
+  background: @COLOR_WHITE !important;
+  color: @COLOR_GRAY !important;
+  border-left-style: solid;
+  border-left-width: 5px;
+  border-left-color: @COLOR_BLUE;
+  > div {
+    margin-left:-5px;
+  }
+  > ul > li {
+    margin: 0px;
+    padding-left: 36px !important;
+  }
+}
+
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+  background: @COLOR_WHITE !important;
+  box-shadow: none !important;
+}
+
+.ant-menu-dark .ant-menu-item .ant-menu-item-selected > a,
+.ant-menu-dark .ant-menu-item .ant-menu-item-selected > a:hover,
+.ant-menu.ant-menu-dark .ant-menu-item-selected > a {
+  color: @COLOR_WHITE !important;
+  > span {
+    color: @COLOR_WHITE !important;
+  }
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected,
+.ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
+  background-color: transparent !important;
+  color: @COLOR_BLACK !important;
+}
+.ant-menu.ant-menu-dark .ant-menu-item-selected::after,
+.ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected::after{
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  background: #0084ff;
+  content: "";
+}
+
+
+
+.ant-btn {
+  background-color: @COLOR_GRAY_BTN !important;
+  border-color: @COLOR_GRAY_BTN !important;
+  color: @COLOR_WHITE !important;  
+}
+
+.ant-btn-primary {
+  background-color: @COLOR_BLUE !important;
+  border-color: @COLOR_BLUE !important;
+}
+
+.ant-btn-danger {
+  color: @COLOR_RED !important;
+  background-color: @COLOR_GRAY_BG_2 !important;
+  border-color: @COLOR_GRAY_BORDER !important;
+  &:hover{
+    background-color: @COLOR_RED !important;
+    color: @COLOR_GRAY_BG_2 !important;
+  }
+}
+
+.ant-btn-link {
+  color: @COLOR_BLUE !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.ant-table-small > .ant-table-content > .ant-table-body {
+  margin: 0 !important;
+}
+
+.ant-table-thead {
+  > tr > th {
+    background-color: @COLOR_GRAY_BTN_BG !important;
+    font-weight: 600;
+  }
+}
+
+.antd-pro-page-header-title {
+  color: @COLOR_TITLE !important;
+  font-weight: bold !important;
+}
+
+.antd-pro-page-header-content {
+  color: @COLOR_TITLE !important;
+}
+
+.antd-pro-page-header-pageHeader .antd-pro-page-header-row {
+  > h1 {
+    margin-bottom: 2px;
+  }
+}
+
+.ant-table-pagination.ant-pagination {
+  margin: 10px 0 0 0 !important;
+  float: none !important;
+  text-align: right;
+}
+
+.ant-steps-label-vertical .ant-steps-item-content {
+  white-space: nowrap;
+}

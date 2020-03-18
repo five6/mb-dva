@@ -1,6 +1,6 @@
 import { getRosMessageByCode } from '@/utils/common.utils';
 import { getToken } from '@/services/authorityService';
-import { formatMessage } from 'umi/locale';
+import { formatMessage } from 'umi-plugin-react/locale';
 /**
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
@@ -36,16 +36,10 @@ const errorHandler = error => {
 
   // TODO 当错误信息是401的时候，跳转到GEEELY SSO服务器登录
   if (status === 401) {
-    if (AUTHORITY_LOGIN) {
-      setAuthority('')
-      window.location.href = '/user/login';
-    }
-    else if (AUTHORITY_SSO) {
-      window.open(SSO_PREFIX_GEELY, '_self');
-    }
+    window.location.href = '/user/login';
   }
 
-  if(!data.code) {
+  if (!data.code) {
     notification.error({
       message: `${formatMessage({ id: 'app.request.error' })} ${status}: ${url}`,
       description: errortext,
@@ -64,7 +58,6 @@ const request = extend({
 
 // request interceptor, change url or options.
 // this location for set url
-// TODO 根据业务需求添加验证签名。20190729
 request.interceptors.request.use((url, options) => {
   const { headers } = options;
   headers['Authorization'] = getToken();;

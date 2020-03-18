@@ -23,7 +23,7 @@ export default {
       dll: false,
       locale: {
         enable: true, // default false
-        default: 'zh-CN', // en-US default zh-CN 
+        default: 'zh-CN', // default zh-CN
         baseNavigator: false, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {

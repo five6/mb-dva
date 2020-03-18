@@ -6,7 +6,7 @@ import { primaryColor } from './defaultSettings';
 
 export default {
   define: {
-    'process.env.API_PREFIX': 'api/v1',
+    'process.env.API_PREFIX': 'api/test',
   },
   theme: {
     'primary-color': primaryColor,
@@ -23,7 +23,7 @@ export default {
       dll: false,
       locale: {
         enable: true, // default false
-        default: 'zh-CN', // en-US default zh-CN 
+        default: 'en-US', // default zh-CN
         baseNavigator: false, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {

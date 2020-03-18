@@ -13,4 +13,23 @@
     - path: /blogs/:id
       name: blog-detail
       component: ./blogs/detail
-    - component: '404'
+    - path: /people
+      name: people
+      component: ./blogs/index
+    - path: /people/:id
+      name: people-detail
+      component: ./people/detail
+    - path: /questions
+      name: questions
+      component: ./questions/index
+    - path: /questions/:id
+      name: questions-detail
+      component: ./questions/detail
+    - path: /login
+      name: login
+      component: ./UserLogin/index
+    - path: /register
+      name: register
+      component: ./UserRegister/index
+    - component: Exception404
+
