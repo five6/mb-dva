@@ -1,22 +1,26 @@
 import styles from './index.less';
-import { router } from 'umi';
+import { router, withRouter } from 'umi';
 import React, { Component } from 'react';
 import RightContent from './RightContent';
 import {
   Layout,
   Menu,
 } from 'antd';
+import { connect } from 'dva';
 
 
 const { Header, Footer, Content } = Layout;
 
+
+@withRouter
+@connect(({ loading }) => ({ loading }))
 class BasicLayout extends Component {
 
   state = {
     defaultSelectedKeys: ['/']
   }
 
-  // 切换主题
+  // 切换page
   changePage = (attr) => {
     router.push(attr.key);
   }
@@ -36,17 +40,9 @@ class BasicLayout extends Component {
       router.push('/account/center');
       return;
     }
-    if (key === 'triggerError') {
-      router.push('/exception/trigger');
-      return;
-    }
-    if (key === 'userinfo') {
-      router.push('/account/settings/base');
-      return;
-    }
     if (key === 'logout') {
       dispatch({
-        type: 'login/logout',
+        type: 'user/logout',
       });
     }
   };
@@ -58,7 +54,7 @@ class BasicLayout extends Component {
 
     const props = {
       currentUser: {},
-      handleMenuClick: this.handleMenuClick,
+      onMenuClick: this.handleMenuClick,
     } 
 
     return (
@@ -69,7 +65,7 @@ class BasicLayout extends Component {
       <Layout className="layout">
         <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
           <div className={styles.logo}>
-            <img style={{ flat: 'left', width: '100%', height: '100%' }} src={require('@/assets/logo/logo.png')} alt="logo" />
+            <img  style={{ flat: 'left', width: '100%', height: '100%' }} src={require('@/assets/logo/logo.png')} alt="logo" />
           </div>
           <Menu
             theme="dark"

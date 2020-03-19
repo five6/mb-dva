@@ -1,5 +1,6 @@
 
 const code = 'X-MESSAGE-RESPONSE-CODE';
+const blogToken = 'X-TOKEN-BLOG';
 
 export function getErrorMessage(str) {
   const messageString =
@@ -11,4 +12,19 @@ export function getErrorMessage(str) {
     message = messageString;
   }
   return message;
+}
+
+export function clearAuthority() {
+  localStorage.removeItem(blogToken);
+}
+
+
+export function setAuthority(authority,) {
+  try {
+    localStorage.setItem(blogToken, authority);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }

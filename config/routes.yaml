@@ -10,6 +10,9 @@
     - path: /blogs
       name: blogs
       component: ./blogs/index
+    - path: /explore
+      name: explore
+      component: ./explore/index
     - path: /blogs/:id
       name: blog-detail
       component: ./blogs/detail
@@ -28,6 +31,11 @@
     - path: /login
       name: login
       component: ./UserLogin/index
+    - path: /register
+      name: register
+    - path: /account/center
+      name: account-center
+      component: ./account/center
     - path: /register
       name: register
       component: ./UserRegister/index

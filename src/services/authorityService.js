@@ -1,4 +1,5 @@
 const code = 'X-MESSAGE-RESPONSE-CODE';
+const blogToken = 'X-TOKEN-BLOG';
 
 export function getToken() {
   let token = getAuthority(code);
@@ -9,7 +10,7 @@ export function getToken() {
 
 export function getAuthority(str) {
   const authorityString =
-    typeof str === 'undefined' ? localStorage.getItem(`X-Token-${code}`) : localStorage.getItem(str);
+    typeof str === 'undefined' ? localStorage.getItem(blogToken) : localStorage.getItem(str);
   let authority;
   try {
     authority = JSON.parse(authorityString);

@@ -1,5 +1,7 @@
 import request from '@/utils/request';
 import { apiPrefix } from '@/utils/api.prefix';
+import { getToken } from '@/services/authorityService';
+
 
 
 export async function fakeAccountLogin(params) {
@@ -45,5 +47,12 @@ export async function queryNotices(id) {
       Accept: "application/json"
     },
   })
+}
+
+export async function logout() {
+  return request(`${apiPrefix}/users/logout`, {
+    method: 'PUT',
+    data: getToken(),
+  });
 }
 

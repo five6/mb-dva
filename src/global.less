@@ -38,9 +38,6 @@ body {
     color: @COLOR_GRAY !important;
   
   }
-  .ant-menu {
-    float: left;
-  }
 }
 
 .ant-table {
@@ -181,4 +178,30 @@ body {
 
 .ant-steps-label-vertical .ant-steps-item-content {
   white-space: nowrap;
+}
+
+@media only screen and (max-width: 768px) {
+  .header :global(.ant-divider-vertical) {
+    vertical-align: unset;
+  }
+  .header .name {
+    display: none;
+  }
+  .header i.trigger {
+    padding: 22px 12px;
+  }
+  .header .logo {
+    padding-left: 12px;
+    padding-right: 12px;
+    position: relative;
+  }
+  .header .right {
+    position: absolute;
+    right: 12px;
+    top: 0;
+    background: #fff;
+  }
+  .header .right .account .avatar {
+    margin-right: 0;
+  }
 }
