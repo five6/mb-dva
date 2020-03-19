@@ -1,6 +1,7 @@
-import styles from './index.css';
+import styles from './index.less';
 import { router } from 'umi';
 import React, { Component } from 'react';
+import RightContent from './RightContent';
 import {
   Layout,
   Menu,
@@ -20,9 +21,45 @@ class BasicLayout extends Component {
     router.push(attr.key);
   }
 
+  handleNoticeVisibleChange = visible => {
+    if (visible) {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'global/fetchNotices',
+      });
+    }
+  };
+
+  handleMenuClick = ({ key }) => {
+    const { dispatch } = this.props;
+    if (key === 'userCenter') {
+      router.push('/account/center');
+      return;
+    }
+    if (key === 'triggerError') {
+      router.push('/exception/trigger');
+      return;
+    }
+    if (key === 'userinfo') {
+      router.push('/account/settings/base');
+      return;
+    }
+    if (key === 'logout') {
+      dispatch({
+        type: 'login/logout',
+      });
+    }
+  };
+
+
   render() {
 
     const { defaultSelectedKeys } = this.state;
+
+    const props = {
+      currentUser: {},
+      handleMenuClick: this.handleMenuClick,
+    } 
 
     return (
       // <div className={styles.normal}>
@@ -48,8 +85,9 @@ class BasicLayout extends Component {
             <Menu.Item key="/explore">发现</Menu.Item>
             <Menu.Item key="/questions">等你解惑</Menu.Item>
           </Menu>
+          <RightContent {...props} {...this.props} />
         </Header>
-        <Content>
+        <Content className={styles.ant_layout_content}>
           {this.props.children}
         </Content>
         <Footer style={{ textAlign: 'center' }}>Blog ©2020 Created by Five6</Footer>
