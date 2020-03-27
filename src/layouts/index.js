@@ -79,14 +79,13 @@ class BasicLayout extends Component {
               </Menu.Item> */}
             <Menu.Item key="/">首页</Menu.Item>
             <Menu.Item key="/explore">发现</Menu.Item>
-            <Menu.Item key="/questions">等你解惑</Menu.Item>
           </Menu>
           <RightContent {...props} {...this.props} />
         </Header>
         <Content className={styles.ant_layout_content}>
           {this.props.children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Blog ©2020 Created by Five6</Footer>
+        <Footer style={{ textAlign: 'center' }}> Copyright © 2018-2020 56网站. 沪ICP备15039329号-2	</Footer>
       </Layout>
     );
   }

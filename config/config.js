@@ -3,7 +3,7 @@ import { YAML } from '../src/utils/utils';
 import { primaryColor } from './defaultSettings';
 export default {
   define: {
-    'process.env.API_PREFIX': 'api/v1',
+    'process.env.API_PREFIX': 'api/v1/frontend',
   },
   theme: {
     'primary-color': primaryColor,
@@ -42,16 +42,11 @@ export default {
       },
     ],
   ],
-  // proxy: {
-  //   '/api/v1/users': {
-  //     target: 'https://api.seniverse.com/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/api/v1/weather': '/v3/weather' },
-  //   },
-  // },
-  targets: {
-    android: 8.1,
-    ie: 9,
+  proxy: {
+    '/api/v1/frontend/**/*': {
+      target: 'http://localhost:9999',
+      changeOrigin: true,
+    },
   },
 };
 

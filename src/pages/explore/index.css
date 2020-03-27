@@ -2,6 +2,7 @@
 .normal {
   font-family: Georgia, sans-serif;
   margin-top: 4em;
+  text-align: center;
 }
 
 .welcome {
@@ -19,4 +20,10 @@
 
 .list code {
   background: #f7f7f7;
+}
+
+
+.exploreMain {
+  margin: 32px auto 107px;
+  width: 1000px;
 }

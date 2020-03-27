@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styles from './index.css';
 
 
 
@@ -6,14 +7,16 @@ class BlogDetail extends Component{
 
   state={
     blogs: {
-      name: '日志列表'
+      name: '发现感兴趣'
     }
   }
 
   render() {
-    const {blogs} = this.state;
+    
     return(
-    <div>{blogs.name}</div>
+      <div className={styles.normal}>
+          探索
+      </div>
     )
   }
 

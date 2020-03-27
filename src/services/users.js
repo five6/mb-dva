@@ -12,7 +12,7 @@ export async function fakeAccountLogin(params) {
 }
 
 export async function fakeRegister(params) {
-  return request('/api/register', {
+  return request('/api/v1/', {
     method: 'POST',
     data: params,
   });
@@ -32,7 +32,7 @@ export async function queryUsers() {
 }
 
 export async function queryCurrentUser(id) {
-  return request(`${apiPrefix}/users/${id}`, {
+  return request(`${apiPrefix}/users/profile`, {
     method: 'GET',
     headers: {
       Accept: "application/json"

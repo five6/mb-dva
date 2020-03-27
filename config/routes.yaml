@@ -7,27 +7,15 @@
     - path: /
       name: homepage
       component: ./index
-    - path: /blogs
-      name: blogs
-      component: ./blogs/index
+    - path: /topics
+      name: topics
+      component: ./topic/index
     - path: /explore
       name: explore
       component: ./explore/index
-    - path: /blogs/:id
-      name: blog-detail
-      component: ./blogs/detail
-    - path: /people
-      name: people
-      component: ./blogs/index
-    - path: /people/:id
-      name: people-detail
-      component: ./people/detail
-    - path: /questions
-      name: questions
-      component: ./questions/index
-    - path: /questions/:id
-      name: questions-detail
-      component: ./questions/detail
+    - path: /topic/:id
+      name: topic-detail
+      component: ./topic/detail
     - path: /login
       name: login
       component: ./UserLogin/index
