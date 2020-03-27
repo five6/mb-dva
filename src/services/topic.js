@@ -1,9 +1,18 @@
 import request from '@/utils/request';
 import { apiPrefix } from '@/utils/api.prefix';
 
-export async function fetchTopics() {
-  return request(`${apiPrefix}/topics`);
+export async function fetchRecommendTopics() {
+  return request(`${apiPrefix}/topics/recommend`);
 }
+
+export async function fetchHotTopics() {
+  return request(`${apiPrefix}/topics/hot`);
+}
+
+export async function fetchFollowings() {
+  return request(`${apiPrefix}/topics/following`);
+}
+
 
 export async function createTopic(data) {
   return request(`${apiPrefix}/topics`, {

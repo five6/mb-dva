@@ -1,5 +1,11 @@
 
 
+- path: /login
+  name: login
+  component: ./UserLogin/index
+- path: /register
+  name: register
+  component: ./UserRegister/index
 - path: /
   name: layout
   component: '../layouts/index'
@@ -16,16 +22,10 @@
     - path: /topic/:id
       name: topic-detail
       component: ./topic/detail
-    - path: /login
-      name: login
-      component: ./UserLogin/index
     - path: /register
       name: register
     - path: /account/center
       name: account-center
       component: ./account/center
-    - path: /register
-      name: register
-      component: ./UserRegister/index
     - component: Exception404
 

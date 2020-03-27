@@ -34,9 +34,9 @@ const errorHandler = error => {
   const errortext = codeMessage[response.status] || response.statusText;
   const { status, url } = response;
 
-  // TODO 当错误信息是401的时候，跳转到GEEELY SSO服务器登录
+  // TODO 当错误信息是401, 跳转到用户登录
   if (status === 401) {
-    window.location.href = '/user/login';
+    window.location.href = '/login';
   }
 
   if (!data.code) {

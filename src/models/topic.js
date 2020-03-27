@@ -1,26 +1,53 @@
-import { fetchTopics, fetchTopicReply, createTopic, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
+import { fetchRecommendTopics, fetchHotTopics, fetchFollowings, fetchTopicReply, createTopic, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
 import { setAuthority, clearAuthority } from '@/utils/authority';
 
 export default {
   namespace: 'topic',
 
   state: {
-    topicData: {
+    hotData: {
         items: [],
         totalCount: 0,
         pageSize: 10,
         currentPage: 1
+    },
+    followingData: {
+      items: [],
+      totalCount: 0,
+      pageSize: 10,
+      currentPage: 1
+    },
+    recommendData: {
+      items: [],
+      totalCount: 0,
+      pageSize: 10,
+      currentPage: 1
     },
     currentUser: {},
     status: undefined,
   },
 
   effects: {
-    *fetchTopics({payload}, { call, put }) {
-      const response = yield call(fetchTopics, payload);
+    *fetchRecommendData({payload}, { call, put }) {
+      const result = yield call(fetchRecommendTopics, payload);
       yield put({
-        type: 'saveTopics',
-        payload: response,
+        type: 'saveRecommendData',
+        payload: { queryCond: payload, result }
+      });
+    },
+    *fetchHotData({payload}, { call, put }) {
+      const result = yield call(fetchHotTopics, payload);
+      yield put({
+        type: 'saveHotData',
+        payload: { queryCond: payload, result }
+
+      });
+    },
+    *fetchFollowingData({payload}, { call, put }) {
+      const result = yield call(fetchFollowings, payload);
+      yield put({
+        type: 'saveFollowingData',
+        payload: { queryCond: payload, result }
       });
     },
     *fetchTopicType({payload}, { call, put }) {
@@ -56,39 +83,36 @@ export default {
   },
 
   reducers: {
-    save(state, action) {
+    saveRecommendData(state, { payload: { queryCond, result } }) {
+      const data = { ...state.recommendData };
+      data.items = result.items;
+      data.currentPage = queryCond.currentPage;
+      data.totalCount = result.totalCount;
       return {
         ...state,
-        list: action.payload,
+        recommendData: data,
       };
     },
-    saveCurrentUser(state, action) {
-      let user = action.payload;
+    saveHotData(state, { payload: { queryCond, result } }) {
+      const data = { ...state.hotData };
+      data.items = result.items;
+      data.currentPage = queryCond.currentPage;
+      data.totalCount = result.totalCount;
       return {
         ...state,
-        currentUser: user || {},
+        hotData: data,
       };
     },
-    changeNotifyCount(state, action) {
+    saveFollowingData(state, { payload: { queryCond, result } }) {
+      const data = { ...state.followingData };
+      data.items = result.items;
+      data.currentPage = queryCond.currentPage;
+      data.totalCount = result.totalCount;
       return {
         ...state,
-        currentUser: {
-          ...state.currentUser,
-          notifyCount: action.payload.totalCount,
-          unreadCount: action.payload.unreadCount,
-        },
+        followingData: data,
       };
     },
-    changeLoginStatus(state, { payload }) {
-      if (payload.status === true)
-        setAuthority(payload);
-      else
-        clearAuthority();
-      return {
-        ...state,
-        currentUser: payload.currentUser,
-        status: payload.status,
-      };
-    },
+  
   },
 };

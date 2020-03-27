@@ -20,7 +20,7 @@ class Topic extends Component{
   }
 
   render() {
-    const {topics} = this.props;
+    const {recommendData, followingData , hotData, currentUser  } = this.props;
     return(
       <div className={styles.normal}>
         <div className="blog-main-content">
@@ -33,13 +33,13 @@ class Topic extends Component{
                  <div className="Topstory-mainColumnCard">
                  <Tabs defaultActiveKey="1">
                   <TabPane tab="推荐" key="1">
-                    <Recommend />
+                    <Recommend recommendData={recommendData} />
                   </TabPane>
                   <TabPane tab="关注" key="2">
-                    <Follow />
+                    <Follow  followingData={followingData}/>
                   </TabPane>
                   <TabPane tab="热榜" key="3">
-                    <Hot />
+                    <Hot hotData={hotData}/>
                   </TabPane>
                   </Tabs>
                 </div>
@@ -58,6 +58,8 @@ class Topic extends Component{
 
 export default connect(state => {
   return {
-    topicData: state.topic.topicData
+    hotData: state.topic.hotData,
+    recommendData: state.topic.recommendData,
+    followingData: state.topic.followingData
   }
 })(Topic);

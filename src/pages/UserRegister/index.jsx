@@ -48,6 +48,7 @@ class UserRegister extends Component {
   componentDidUpdate() {
     const { userRegister, form } = this.props;
     const account = form.getFieldValue('mail');
+    return;
 
     if (userRegister.status === 'ok') {
       message.success('注册成功！');
@@ -65,6 +66,7 @@ class UserRegister extends Component {
   }
 
   onGetCaptcha = () => {
+    return;
     let count = 59;
     this.setState({
       count,
@@ -97,6 +99,7 @@ class UserRegister extends Component {
   };
 
   handleSubmit = e => {
+    return;
     e.preventDefault();
     const { form, dispatch } = this.props;
     form.validateFields(
@@ -117,6 +120,7 @@ class UserRegister extends Component {
 
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
+    return;
 
     if (value && value !== form.getFieldValue('password')) {
       callback(
@@ -131,6 +135,7 @@ class UserRegister extends Component {
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
+    return;
 
     if (!value) {
       this.setState({
@@ -174,6 +179,7 @@ class UserRegister extends Component {
   };
 
   renderPasswordProgress = () => {
+    return;
     const { form } = this.props;
     const value = form.getFieldValue('password');
     const passwordStatus = this.getPasswordStatus();
@@ -196,9 +202,9 @@ class UserRegister extends Component {
     const { count, prefix, help, visible } = this.state;
     return (
       <div className={styles.main}>
-        <h3>
-          <FormattedMessage id="userregister.register.register" />
-        </h3>
+        <div className={styles.formTitle}>
+        {formatMessage({ id: 'userregister.register.register' })}
+      </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('mail', {
@@ -385,7 +391,7 @@ class UserRegister extends Component {
             >
               <FormattedMessage id="userregister.register.register" />
             </Button>
-            <Link className={styles.login} to="/user/login">
+            <Link className={styles.login} to="/login">
               <FormattedMessage id="userregister.register.sign-in" />
             </Link>
           </FormItem>

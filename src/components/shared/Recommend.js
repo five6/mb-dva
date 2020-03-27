@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
+import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
+import { connect } from 'dva';
 
-class BlogDetail extends Component{
+class Recommend extends Component{
 
   state={
     blogInfo: {
@@ -10,7 +11,19 @@ class BlogDetail extends Component{
     }
   }
 
+  fetchRecommendData = (currentPage) => {
+    const { dispatch, recommendData: { pageSize } } = this.props;
+    dispatch({
+      type: 'topic/fetchRecommendData',
+      payload: {
+        currentPage,
+        pageSize
+      }
+    })
+  }
+
   render() {
+    const { recommendData } = this.props;  
     return(
         <div className="TopstoryContent">
             <div className="ListShortcut">
@@ -76,6 +89,13 @@ class BlogDetail extends Component{
                                 )
                             })
                         }
+                        <Pagination
+                        className="ant-table-pagination"
+                        total={recommendData.totalCount}
+                        current={recommendData.currentPage}
+                        pageSize={recommendData.pageSize}
+                        onChange={this.fetchRecommendData}
+                        />
                     </div>
                 </div>
             </div>
@@ -85,4 +105,4 @@ class BlogDetail extends Component{
 
 }
 
-export default BlogDetail;
+export default connect()(Recommend);;

@@ -18,10 +18,6 @@ export async function fakeRegister(params) {
   });
 }
 
-export async function getFakeCaptcha(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
-}
-
 export async function queryUsers() {
   return request(`${apiPrefix}/users`, {
     method: 'GET',
@@ -56,3 +52,9 @@ export async function logout() {
   });
 }
 
+export async function getFakeCaptcha() {
+  return request(`${apiPrefix}/users/captcha?_t=${new Date().getTime()}`, {
+    responseType: 'blob',
+    getResponse: true
+  });
+}
