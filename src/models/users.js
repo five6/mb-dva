@@ -1,27 +1,37 @@
 import { queryUsers, queryCurrentUser, getFakeCaptcha, logout, login} from '@/services/users';
-import { setAuthority, clearAuthority } from '@/utils/authority';
+import { setAuthority, clearAuthority, getAuthority} from '@/utils/authority';
 import { message } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi/locale';
+import { routerRedux } from 'dva';
 
 export default {
   namespace: 'user',
 
   state: {
-    list: [],
     currentUser: {},
     status: undefined,
   },
 
   effects: {
-    *logout({payload}, { call, put }) {
-      clearAuthority();
-      const result = yield call(logout, payload);
-      message.success('您已成功退出！')//formatMessage({id: 'common.success'}))
+    *login({payload, callback}, { call, put }) {
+      const response = yield call(login, payload);
+      if (response.code === 0) {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: {
+            status: true,
+            datas: response.datas
+          }
+        });
+      }
+      callback(response);
+    },
+    *logout(_, { call, put }) {
+      message.success('您已安全退出！');
       yield put({
         type: 'changeLoginStatus',
         payload: {
           status: false,
-          currentUser: null,
         },
       });
     },
@@ -42,12 +52,6 @@ export default {
   },
 
   reducers: {
-    save(state, action) {
-      return {
-        ...state,
-        list: action.payload,
-      };
-    },
     saveCurrentUser(state, action) {
       let user = action.payload;
       return {
@@ -67,12 +71,13 @@ export default {
     },
     changeLoginStatus(state, { payload }) {
       if (payload.status === true)
-        setAuthority(payload);
-      else
+        setAuthority(payload.datas);
+      else {
         clearAuthority();
+        window.location.href ='/login';
+      }
       return {
         ...state,
-        currentUser: payload.currentUser,
         status: payload.status,
       };
     },

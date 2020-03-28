@@ -6,6 +6,7 @@ import { Checkbox, Alert, message, Icon, Input, Form, Row, Col, Button } from 'a
 import Login from '@/components/Login';
 import styles from './Login.less';
 import { getFakeCaptcha } from '@/services/users';
+import router from 'umi/router';
 
 
 /**
@@ -21,10 +22,8 @@ const { Tab, UserName, Password, Mobile, ImgCaptcha, Submit } = Login;
 }))
 class MyForm extends Component {
   state = {
-    online: false,
     captcha: '',
-    vertfId: '',
-    currentOk: true
+    errorInfo: null
   };
 
   componentWillMount() {
@@ -47,7 +46,6 @@ class MyForm extends Component {
       if (!data || !data.size) {
         self.setState({
           captcha: '',
-          vertfId: ''
         })
         return;
       }
@@ -55,65 +53,55 @@ class MyForm extends Component {
       reader.readAsDataURL(data);
       reader.onload = () => {
         self.setState({
-          vertfId: response.headers.get('vertfId'),
           captcha: reader.result
         })
       }
     }).catch(err => {
       self.setState({
         captcha: "",
-        vertfId: ''
       })
       message.error(formatMessage({ id: 'common_error.unknown.error' }));
     })
   }
 
 
-  handleSubmit = (err, values) => {
+  handleSubmit = (e) => {
     const self = this;
-    if (!err) {
-      const { online, vertfId } = this.state;
-      const { dispatch } = this.props;
-      const payload = {
-        online,
-        type: 2,
-        vertfId
-      }
-      dispatch({
-        type: 'user/login',
-        payload,
-        callback: (response) => {
-          if (response && response.code !== 0) {
-            self.onGetCaptcha();
-            self.setState({
-              currentOk: false,
-            })
+    e.preventDefault();
+    this.loginForm.validateFields((err, values) => {
+      if (!err) {
+        const { dispatch } = this.props;
+        this.setState({
+          loading: true
+        });
+        dispatch({
+          type: 'user/login',
+          payload: values,
+          callback: (response) => {
+            if (response && response.code !== 0) {
+              message.error(response.msg);
+              self.onGetCaptcha();
+              self.setState({
+                loading: false,
+              })
+            } else {
+              router.push('/');
+            }
           }
-        }
-      });
-    }
-  };
-
-  changeAutoLogin = e => {
-    this.setState({
-      online: e.target.checked,
-    });
+        });
+      }
+    })
   };
 
   render() {
     const { login, submitting, form } = this.props;
-    const { online, captcha, waitTime, surplusNum, currentOk } = this.state;
+    const { captcha } = this.state;
     return (
       <div className={styles.main}>
-        {
-          !currentOk ? <Alert style={{ marginBottom: 24 }} message={formatMessage({ id: 'app.login.surplusNum_waitTime' }).replace('[surplusNum]', surplusNum).replace('[waitTime]', waitTime)} type="error" showIcon />
-            : null
-        }
         <div className={styles.formTitle}>
           {formatMessage({ id: 'user.login' })}
         </div>
         <Login
-          onSubmit={this.handleSubmit}
           ref={form => {
             this.loginForm = form;
           }}
@@ -150,7 +138,7 @@ class MyForm extends Component {
               },
             ]}
           />
-          <Submit disabled={!currentOk} loading={submitting}>
+          <Submit type="button" className={styles.loginButton} onClick={this.handleSubmit} loading={submitting}>
             <FormattedMessage id="app.login" />
           </Submit>
           <Link className={styles.login} to="/register">
@@ -162,5 +150,5 @@ class MyForm extends Component {
   }
 }
 
-export default MyForm;
+export default Form.create()(MyForm);
 

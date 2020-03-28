@@ -1,6 +1,7 @@
 import { getRosMessageByCode } from '@/utils/common.utils';
 import { getToken } from '@/services/authorityService';
 import { formatMessage } from 'umi-plugin-react/locale';
+
 /**
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
@@ -36,7 +37,9 @@ const errorHandler = error => {
 
   // TODO 当错误信息是401, 跳转到用户登录
   if (status === 401) {
-    window.location.href = '/login';
+    if(window.location.pathname !== '/login' && window.location.pathname !== 'register') {
+      window.location.href = '/login';
+    }
   }
 
   if (!data.code) {

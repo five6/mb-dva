@@ -44,7 +44,7 @@ export default {
   ],
   proxy: {
     '/api/v1/frontend/**/*': {
-      target: 'http://localhost:9999',
+      target: 'http://localhost:7000',
       changeOrigin: true,
     },
   },

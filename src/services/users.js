@@ -4,17 +4,17 @@ import { getToken } from '@/services/authorityService';
 
 
 
-export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+export async function login(data) {
+  return request(`${apiPrefix}/users/signin`, {
     method: 'POST',
-    data: params,
+    data,
   });
 }
 
-export async function fakeRegister(params) {
-  return request('/api/v1/', {
+export async function register(data) {
+  return request(`${apiPrefix}/users/signup`, {
     method: 'POST',
-    data: params,
+    data,
   });
 }
 

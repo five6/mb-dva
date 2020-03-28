@@ -1,30 +1,29 @@
 
-const code = 'X-MESSAGE-RESPONSE-CODE';
-const blogToken = 'X-TOKEN-BLOG';
+import jwtDecode from 'jwt-decode';
 
-export function getErrorMessage(str) {
-  const messageString =
-    typeof str === 'undefined' ? localStorage.getItem(`${code}`) : localStorage.getItem(str);
-  let message;
-  try {
-    message = JSON.parse(messageString);
-  } catch (e) {
-    message = messageString;
-  }
-  return message;
-}
+const TOKEN = 'X-TOKEN-BLOG';
 
 export function clearAuthority() {
-  localStorage.removeItem(blogToken);
+  localStorage.removeItem(TOKEN);
 }
 
 
 export function setAuthority(authority,) {
   try {
-    localStorage.setItem(blogToken, authority);
+    localStorage.setItem(TOKEN, authority);
     return true;
   } catch (error) {
     console.log(error);
     return false;
   }
+}
+
+export function getAuthority() {
+  return localStorage.getItem(TOKEN);
+}
+
+export function getLoginUserInfo() {
+  const jwt =  getAuthority();
+  if(!jwt) return null;
+  return jwtDecode(jwt);
 }

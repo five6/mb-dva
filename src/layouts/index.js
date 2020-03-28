@@ -1,5 +1,4 @@
 import styles from './index.less';
-import { router, withRouter } from 'umi';
 import React, { Component } from 'react';
 import RightContent from './RightContent';
 import {
@@ -7,17 +6,24 @@ import {
   Menu,
 } from 'antd';
 import { connect } from 'dva';
-
+import router from 'umi/router';
+import { getLoginUserInfo } from '@/utils/authority';
 
 const { Header, Footer, Content } = Layout;
 
 
-@withRouter
-@connect(({ loading }) => ({ loading }))
 class BasicLayout extends Component {
 
-  state = {
-    defaultSelectedKeys: ['/']
+  constructor(props) {
+    super(props);
+    this.state = {
+      defaultSelectedKeys: [props.location.pathname]
+    }
+    const userInfo = getLoginUserInfo();
+    if(!userInfo) {
+      router.push('/login');
+      return;
+    }
   }
 
   // 切换page
@@ -92,4 +98,4 @@ class BasicLayout extends Component {
 }
 
 
-export default BasicLayout;
+export default connect()(BasicLayout);

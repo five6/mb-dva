@@ -73,13 +73,6 @@ export default {
         list: action.payload,
       };
     },
-    saveCurrentUser(state, action) {
-      let user = action.payload;
-      return {
-        ...state,
-        currentUser: user || {},
-      };
-    },
     saveNotices(state, { payload }) {
       return {
         ...state,
