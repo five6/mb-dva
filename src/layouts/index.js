@@ -80,11 +80,13 @@ class BasicLayout extends Component {
             style={{ lineHeight: '64px' }}
             onSelect={this.changePage}
           >
-            {/* <Menu.Item key="1">
-                <img style={{flat: 'left'}} src={'../assets/logo.png'} alt="logo" />
-              </Menu.Item> */}
             <Menu.Item key="/">首页</Menu.Item>
+            <Menu.Item key="/good">精华</Menu.Item>
+            <Menu.Item key="/share">分享</Menu.Item>
+            <Menu.Item key="/ask">问答</Menu.Item>
+            <Menu.Item key="/job">招聘</Menu.Item>
             <Menu.Item key="/explore">发现</Menu.Item>
+
           </Menu>
           <RightContent {...props} {...this.props} />
         </Header>

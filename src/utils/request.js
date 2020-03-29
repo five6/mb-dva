@@ -63,7 +63,7 @@ const request = extend({
 // this location for set url
 request.interceptors.request.use((url, options) => {
   const { headers } = options;
-  headers['Authorization'] = getToken();;
+  headers['Authorization'] = getToken();
   return ({
     url,
     options,

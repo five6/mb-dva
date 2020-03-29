@@ -1,8 +1,7 @@
-const code = 'X-MESSAGE-RESPONSE-CODE';
 const TOKEN = 'X-TOKEN-BLOG';
 
 export function getToken() {
-  let token = getAuthority(code);
+  let token = getAuthority(TOKEN);
 
   if (!!token === false) return '';
   else return `Bearer ${token}`

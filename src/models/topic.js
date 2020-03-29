@@ -1,61 +1,69 @@
-import { fetchRecommendTopics, fetchHotTopics, fetchFollowings, fetchTopicReply, createTopic, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
+import { fetchTopics, fetchTopicReply, createTopic, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
 import { setAuthority, clearAuthority } from '@/utils/authority';
 
 export default {
   namespace: 'topic',
 
   state: {
-    hotData: {
-        items: [],
-        totalCount: 0,
-        pageSize: 10,
-        currentPage: 1
-    },
-    followingData: {
-      items: [],
-      totalCount: 0,
-      pageSize: 10,
-      currentPage: 1
-    },
-    recommendData: {
-      items: [],
-      totalCount: 0,
-      pageSize: 10,
-      currentPage: 1
+    topicTypes: [],
+    topicDatas: {
+        all: {
+          items: [],
+          totalCount: 0,
+          pageSize: 10,
+          currentPage: 1
+        },
+        googd: {
+          items: [],
+          totalCount: 0,
+          pageSize: 10,
+          currentPage: 1
+        },
+        share: {
+          items: [],
+          totalCount: 0,
+          pageSize: 10,
+          currentPage: 1
+        },
+        ask: {
+          items: [],
+          totalCount: 0,
+          pageSize: 10,
+          currentPage: 1
+        },
+        job: {
+          items: [],
+          totalCount: 0,
+          pageSize: 10,
+          currentPage: 1
+        }
     },
     currentUser: {},
     status: undefined,
   },
 
   effects: {
-    *fetchRecommendData({payload}, { call, put }) {
-      const result = yield call(fetchRecommendTopics, payload);
-      yield put({
-        type: 'saveRecommendData',
-        payload: { queryCond: payload, result }
-      });
-    },
-    *fetchHotData({payload}, { call, put }) {
-      const result = yield call(fetchHotTopics, payload);
-      yield put({
-        type: 'saveHotData',
-        payload: { queryCond: payload, result }
-
-      });
-    },
-    *fetchFollowingData({payload}, { call, put }) {
-      const result = yield call(fetchFollowings, payload);
-      yield put({
-        type: 'saveFollowingData',
-        payload: { queryCond: payload, result }
-      });
-    },
-    *fetchTopicType({payload}, { call, put }) {
-        const response = yield call(fetchTopicType, payload);
-        yield put({
-          type: 'saveTopicType',
-          payload: response,
+    *fetchTopicTypes(_, {call, put}) {
+      const result = yield call(fetchTopicType);
+      const typeObj = result.datas;
+      const topicTypes = [];
+      for (let key in typeObj) {
+        topicTypes.push({
+          label: key,
+          value: typeObj[key]
         });
+      }
+      yield put({
+        type: 'saveTopicTypes',
+        payload: topicTypes
+      });
+    },
+    *fetchTopics({payload}, { call, put }) {
+      const result = yield call(fetchTopics, payload);
+      yield put({
+        type: 'saveTopicData',
+        payload: { queryCond: payload, result }
+      });
     },
     *fetchTopicReply({payload}, { call, put }) {
         const response = yield call(fetchTopicReply, payload);
@@ -83,36 +91,26 @@ export default {
   },
 
   reducers: {
-    saveRecommendData(state, { payload: { queryCond, result } }) {
-      const data = { ...state.recommendData };
+    saveTopicTypes(state, { payload }) {
+      return {
+        ...state,
+        topicTypes: payload
+      }
+    },
+    saveTopicData(state, { payload: { queryCond, result } }) {
+      const tab = queryCond.topicType || 'all';
+      const data = { ...state.topicDatas[tab] };
+      
       data.items = result.items;
       data.currentPage = queryCond.currentPage;
       data.totalCount = result.totalCount;
+
+      const topicDatas = state.topicDatas;
+      topicDatas[tab] = data;
       return {
         ...state,
-        recommendData: data,
+        topicDatas
       };
     },
-    saveHotData(state, { payload: { queryCond, result } }) {
-      const data = { ...state.hotData };
-      data.items = result.items;
-      data.currentPage = queryCond.currentPage;
-      data.totalCount = result.totalCount;
-      return {
-        ...state,
-        hotData: data,
-      };
-    },
-    saveFollowingData(state, { payload: { queryCond, result } }) {
-      const data = { ...state.followingData };
-      data.items = result.items;
-      data.currentPage = queryCond.currentPage;
-      data.totalCount = result.totalCount;
-      return {
-        ...state,
-        followingData: data,
-      };
-    },
-  
   },
 };

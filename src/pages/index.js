@@ -4,23 +4,18 @@ import { Component } from 'react';
 
 import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 
-import Recommend from '@/components/shared/Recommend';
-import Follow from '@/components/shared/Follow';
-import Hot from '@/components/shared/Hot';
+import Topic from '@/components/shared/Topic';
+// import TopicDetail from '@/components/shared/TopicDetail';
+import GlobalSideBar from '@/components/shared/GlobalSideBar';
+
 
 
 const { TabPane } = Tabs;
 
-class Topic extends Component{
-
-  state={
-    blogs: {
-      name: '日志列表'
-    }
-  }
+class Index extends Component{
 
   render() {
-    const {recommendData, followingData , hotData, currentUser  } = this.props;
+
     return(
       <div className={styles.normal}>
         <div className="blog-main-content">
@@ -31,21 +26,11 @@ class Topic extends Component{
                     <img src="https://pic2.zhimg.com/v2-6e8fccc8a30e8cf15a90e7a894011579_r.jpg" className="css-vnkjjr"></img>
                   </a>
                  <div className="Topstory-mainColumnCard">
-                 <Tabs defaultActiveKey="1">
-                  <TabPane tab="推荐" key="1">
-                    <Recommend recommendData={recommendData} />
-                  </TabPane>
-                  <TabPane tab="关注" key="2">
-                    <Follow  followingData={followingData}/>
-                  </TabPane>
-                  <TabPane tab="热榜" key="3">
-                    <Hot hotData={hotData}/>
-                  </TabPane>
-                  </Tabs>
+                  <Topic />
                 </div>
               </div>
               <div className="GlobalSideBar">
-                右边
+                  <GlobalSideBar />
               </div>
             </div>
           </div>
@@ -58,8 +43,6 @@ class Topic extends Component{
 
 export default connect(state => {
   return {
-    hotData: state.topic.hotData,
-    recommendData: state.topic.recommendData,
-    followingData: state.topic.followingData
+    topicState: state.topic,
   }
-})(Topic);
+})(Index);

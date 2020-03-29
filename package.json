@@ -3,12 +3,7 @@
   "scripts": {
     "dev": "cross-env PORT=8888 umi dev",
     "start": "cross-env MOCK=none PORT=8888 umi dev",
-    "start:local": "cross-env UMI_ENV=local MOCK=none PORT=8888 umi dev",
-    "start:test": "cross-env UMI_ENV=test MOCK=none BROWSER=none PORT=8888 umi dev",
-    "start:prod": "cross-env UMI_ENV=prod MOCK=none BROWSER=none PORT=8888 umi dev",
     "build": "umi build",
-    "build-test": "cross-env UMI_ENV=test umi build",
-    "build-prod": "cross-env UMI_ENV=prod umi build",
     "test": "umi test",
     "lint": "eslint {src,mock,tests}/**/*.{js,jsx} --fix",
     "precommit": "lint-staged"

@@ -3,19 +3,28 @@ import React, { Component } from 'react';
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 import { connect } from 'dva';
 
-class Recommend extends Component{
+class Topic extends Component{
 
   state={
-    blogInfo: {
-      name: '日志详情'
+    topicData: {
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1,
+        items: []
     }
   }
 
-  fetchRecommendData = (currentPage) => {
-    const { dispatch, recommendData: { pageSize } } = this.props;
+  componentDidMount() {
+      this.fetchTopicData(1);
+  }
+
+  fetchTopicData = (currentPage) => {
+    const {dispatch, topicType} = this.props;
+    const { topicData: { pageSize } } = this.state;
     dispatch({
-      type: 'topic/fetchRecommendData',
+      type: 'topic/fetchTopics',
       payload: {
+        topicType,
         currentPage,
         pageSize
       }
@@ -23,7 +32,7 @@ class Recommend extends Component{
   }
 
   render() {
-    const { recommendData } = this.props;  
+    const { topicData } = this.state;  
     return(
         <div className="TopstoryContent">
             <div className="ListShortcut">
@@ -91,10 +100,10 @@ class Recommend extends Component{
                         }
                         <Pagination
                         className="ant-table-pagination"
-                        total={recommendData.totalCount}
-                        current={recommendData.currentPage}
-                        pageSize={recommendData.pageSize}
-                        onChange={this.fetchRecommendData}
+                        total={topicData.totalCount}
+                        current={topicData.currentPage}
+                        pageSize={topicData.pageSize}
+                        onChange={this.fetchTopicData}
                         />
                     </div>
                 </div>
@@ -105,4 +114,4 @@ class Recommend extends Component{
 
 }
 
-export default connect()(Recommend);;
+export default connect()(Topic);;
