@@ -5,6 +5,8 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import router from 'umi/router';
 import styles from './style.less';
+import { getFakeCaptcha } from '@/services/users';
+
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -39,9 +41,15 @@ class UserRegister extends Component {
     visible: false,
     help: '',
     prefix: '86',
+    captcha: ''
   };
 
   interval = undefined;
+
+  componentDidMount() {
+    this.onGetCaptcha();
+
+  }
 
   componentDidUpdate() {
     const { userRegister, form } = this.props;
@@ -64,21 +72,27 @@ class UserRegister extends Component {
   }
 
   onGetCaptcha = () => {
-    return;
-    let count = 59;
-    this.setState({
-      count,
-    });
-    this.interval = window.setInterval(() => {
-      count -= 1;
-      this.setState({
-        count,
-      });
-
-      if (count === 0) {
-        clearInterval(this.interval);
+    const self = this;
+    getFakeCaptcha().then(({ data, response }) => {
+      if (!data || !data.size) {
+        self.setState({
+          captcha: '',
+        })
+        return;
       }
-    }, 1000);
+      const reader = new FileReader();
+      reader.readAsDataURL(data);
+      reader.onload = () => {
+        self.setState({
+          captcha: reader.result
+        })
+      }
+    }).catch(err => {
+      self.setState({
+        captcha: "",
+      })
+      message.error(formatMessage({ id: 'common_error.unknown.error' }));
+    })
   };
 
   getPasswordStatus = () => {
@@ -197,15 +211,40 @@ class UserRegister extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible } = this.state;
+    const { count, prefix, help, visible, captcha } = this.state;
     return (
       <div className={styles.main}>
         <div className={styles.formTitle}>
         {formatMessage({ id: 'userregister.register.register' })}
       </div>
-        <Form onSubmit={this.handleSubmit}>
+        <Form className="form-register" onSubmit={this.handleSubmit}>
+        <FormItem>
+            {getFieldDecorator('username', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({
+                    id: 'userregister.userName.required',
+                  }),
+                },
+                {
+                  type: 'user',
+                  message: formatMessage({
+                    id: 'userregister.email.wrong-format',
+                  }),
+                },
+              ],
+            })(
+              <Input
+                size="large"
+                placeholder={formatMessage({
+                  id: 'userregister.username.placeholder',
+                })}
+              />,
+            )}
+          </FormItem>
           <FormItem>
-            {getFieldDecorator('mail', {
+            {getFieldDecorator('email', {
               rules: [
                 {
                   required: true,
@@ -364,7 +403,8 @@ class UserRegister extends Component {
                 )}
               </Col>
               <Col span={8}>
-                <Button
+                <img style={{cursor: 'pointer'}} src={captcha} alt=""  onClick={this.onGetCaptcha} />
+                {/* <Button
                   size="large"
                   disabled={!!count}
                   className={styles.getCaptcha}
@@ -375,7 +415,7 @@ class UserRegister extends Component {
                     : formatMessage({
                         id: 'userregister.register.get-verification-code',
                       })}
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </FormItem>

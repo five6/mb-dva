@@ -15,7 +15,7 @@ const { TabPane } = Tabs;
 class Index extends Component{
 
   render() {
-
+    const { typeTopics } = this.props; 
     return(
       <div className={styles.normal}>
         <div className="blog-main-content">
@@ -26,7 +26,7 @@ class Index extends Component{
                     <img src="https://pic2.zhimg.com/v2-6e8fccc8a30e8cf15a90e7a894011579_r.jpg" className="css-vnkjjr"></img>
                   </a>
                  <div className="Topstory-mainColumnCard">
-                  <Topic />
+                  <Topic typeTopics={typeTopics} />
                 </div>
               </div>
               <div className="GlobalSideBar">
@@ -43,6 +43,6 @@ class Index extends Component{
 
 export default connect(state => {
   return {
-    topicState: state.topic,
+    typeTopics: state.topic.topicDatas.all,
   }
 })(Index);

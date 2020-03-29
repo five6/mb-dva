@@ -27,12 +27,7 @@ class MyForm extends Component {
   };
 
   componentWillMount() {
-    const { dispatch } = this.props;
     this.onGetCaptcha();
-    dispatch({
-      type: 'global/getOtaRosMessage',
-      payload: {}
-    })
   }
 
 

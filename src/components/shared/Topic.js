@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 import { connect } from 'dva';
-
+import StrSubstringPipe from './pipes/StrSubstringPipe';
 class Topic extends Component{
 
   state={
@@ -20,7 +20,7 @@ class Topic extends Component{
 
   fetchTopicData = (currentPage) => {
     const {dispatch, topicType} = this.props;
-    const { topicData: { pageSize } } = this.state;
+    const { typeTopics: { pageSize } } = this.props;
     dispatch({
       type: 'topic/fetchTopics',
       payload: {
@@ -32,19 +32,19 @@ class Topic extends Component{
   }
 
   render() {
-    const { topicData } = this.state;  
+    const { typeTopics: { items =[], totalCount = 0, pageSize = 10, currentPage = 1}} = this.props;  
     return(
         <div className="TopstoryContent">
             <div className="ListShortcut">
                 <div className="Topstory-follow">
                     <div>
                         {
-                            [1,2,3].map((item, index) => {
+                            items.map((item, index) => {
                                 return(
-                                    <div key={item} className="Card TopstoryItem TopstoryItem-isRecommend">
+                                    <div key={item._id} className="Card TopstoryItem TopstoryItem-isRecommend">
                                         <h2 className="ContentItem-title">
                                             <div>
-                                                <a target="_blank" data-za-detail-view-element_name="Title" data-za-detail-view-id="2812" href="/question/27145069/answer/678977385">程序员们平时都喜欢逛什么论坛呢？</a>
+                                                <a target="_blank" data-za-detail-view-element_name="Title" data-za-detail-view-id="2812" href="/question/27145069/answer/678977385">{item.title}</a>
                                             </div>
                                         </h2>
                                         <div className="RichContent is-collapsed">
@@ -55,7 +55,7 @@ class Topic extends Component{
                                             </div>
                                             <div className="RichContent-inner">
                                                 <span className="RichText ztext CopyrightRichText-richText">
-                                                熠杰： 3月7日，隶属最高检察院的《检查日报》用了整整三个版面痛批孙杨和孙母，第一版标题为："无视规则将会承担相应后果“，第二版标题为：”商业比赛不能与国家荣誉捆绑“，第三版标题为：”观察孙杨事…
+                                                    <StrSubstringPipe textlength={120} content={item.content} />
                                                 </span>
                                                 <button type="button" className="Button ContentItem-more Button--plain">阅读全文
                                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>&#8203;
@@ -100,9 +100,9 @@ class Topic extends Component{
                         }
                         <Pagination
                         className="ant-table-pagination"
-                        total={topicData.totalCount}
-                        current={topicData.currentPage}
-                        pageSize={topicData.pageSize}
+                        total={totalCount}
+                        current={currentPage}
+                        pageSize={pageSize}
                         onChange={this.fetchTopicData}
                         />
                     </div>

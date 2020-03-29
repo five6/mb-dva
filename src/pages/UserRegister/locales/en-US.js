@@ -43,6 +43,7 @@ export default {
   'userregister.form.submit': 'Submit',
   'userregister.form.save': 'Save',
   'userregister.email.placeholder': 'Email',
+  'userregister.username.placeholder': 'userName',
   'userregister.password.placeholder': 'Password',
   'userregister.confirm-password.placeholder': 'Confirm password',
   'userregister.phone-number.placeholder': 'Phone number',

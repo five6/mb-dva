@@ -41,6 +41,7 @@ export default {
   'userregister.form.submit': '提交',
   'userregister.form.save': '保存',
   'userregister.email.placeholder': '邮箱',
+  'userregister.username.placeholder': '用户名',
   'userregister.password.placeholder': '至少6位密码，区分大小写',
   'userregister.confirm-password.placeholder': '确认密码',
   'userregister.phone-number.placeholder': '手机号',
