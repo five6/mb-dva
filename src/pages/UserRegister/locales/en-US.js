@@ -22,6 +22,7 @@ export default {
   'userregister.email.required': 'Please enter your email!',
   'userregister.email.wrong-format': 'The email address is in the wrong format!',
   'userregister.userName.required': 'Please enter your userName!',
+  'userregister.userName.strength.required': 'userName must 6-18 letters',
   'userregister.password.required': 'Please enter your password!',
   'userregister.password.twice': 'The passwords entered twice do not match!',
   'userregister.strength.msg':

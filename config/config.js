@@ -1,6 +1,7 @@
 // ref: https://umijs.org/config/
 import { YAML } from '../src/utils/utils';
 import { primaryColor } from './defaultSettings';
+
 export default {
   define: {
     'process.env.API_PREFIX': 'api/v1/frontend',
@@ -43,7 +44,7 @@ export default {
     ],
   ],
   proxy: {
-    '/api/v1/frontend/**/*': {
+    '/api/v1/**/*': {
       target: 'http://localhost:7000',
       changeOrigin: true,
     },

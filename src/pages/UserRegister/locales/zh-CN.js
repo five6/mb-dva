@@ -21,6 +21,7 @@ export default {
   'userregister.email.required': '请输入邮箱地址！',
   'userregister.email.wrong-format': '邮箱地址格式错误！',
   'userregister.userName.required': '请输入用户名!',
+  'userregister.userName.strength.required': '用户名必须6-18位有效字符',
   'userregister.password.required': '请输入密码！',
   'userregister.password.twice': '两次输入的密码不匹配!',
   'userregister.strength.msg': '请至少输入 6 个字符。请不要使用容易被猜到的密码。',
@@ -72,4 +73,5 @@ export default {
   'userregister.option.B': '同事乙',
   'userregister.option.C': '同事丙',
   'userregister.navBar.lang': '语言',
+  
 };

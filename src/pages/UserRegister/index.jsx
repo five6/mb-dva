@@ -41,34 +41,14 @@ class UserRegister extends Component {
     visible: false,
     help: '',
     prefix: '86',
-    captcha: ''
+    captcha: '',
+    confirmLoading: false
   };
 
-  interval = undefined;
 
   componentDidMount() {
     this.onGetCaptcha();
 
-  }
-
-  componentDidUpdate() {
-    const { userRegister, form } = this.props;
-    const account = form.getFieldValue('mail');
-    return;
-
-    if (userRegister.status === 'ok') {
-      message.success('注册成功！');
-      router.push({
-        pathname: '/user/register-result',
-        state: {
-          account,
-        },
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   onGetCaptcha = () => {
@@ -111,29 +91,37 @@ class UserRegister extends Component {
   };
 
   handleSubmit = e => {
-    return;
     e.preventDefault();
+    const self = this;
     const { form, dispatch } = this.props;
-    form.validateFields(
-      {
-        force: true,
-      },
-      (err, values) => {
+    form.validateFields((err, values) => {
         if (!err) {
+          self.setState({
+            confirmLoading: true
+          })
           const { prefix } = this.state;
           dispatch({
-            type: 'userRegister/submit',
+            type: 'user/register',
             payload: { ...values, prefix },
+            callback:(res) => {
+              self.setState({
+                confirmLoading: false
+              })
+              if(res && res.code === 0) {
+                message.success(formatMessage({id: 'userregister.register-result.msg'}).replace("{email}", res.datas.email));
+                router.push('/login');
+              } else {
+                message.error(res.msg);
+              }
+            }
           });
         }
-      },
+      }
     );
   };
 
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
-    return;
-
     if (value && value !== form.getFieldValue('password')) {
       callback(
         formatMessage({
@@ -147,8 +135,6 @@ class UserRegister extends Component {
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
-    return;
-
     if (!value) {
       this.setState({
         help: formatMessage({
@@ -191,7 +177,6 @@ class UserRegister extends Component {
   };
 
   renderPasswordProgress = () => {
-    return;
     const { form } = this.props;
     const value = form.getFieldValue('password');
     const passwordStatus = this.getPasswordStatus();
@@ -209,9 +194,9 @@ class UserRegister extends Component {
   };
 
   render() {
-    const { form, submitting } = this.props;
+    const { form } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible, captcha } = this.state;
+    const { count, prefix, help, visible, captcha, confirmLoading } = this.state;
     return (
       <div className={styles.main}>
         <div className={styles.formTitle}>
@@ -228,17 +213,17 @@ class UserRegister extends Component {
                   }),
                 },
                 {
-                  type: 'user',
-                  message: formatMessage({
-                    id: 'userregister.email.wrong-format',
-                  }),
-                },
+                    pattern: /^\S.{4,16}\S$/,
+                    message: formatMessage({
+                      id: 'userregister.userName.strength.required',
+                    }),
+                }
               ],
             })(
               <Input
                 size="large"
                 placeholder={formatMessage({
-                  id: 'userregister.username.placeholder',
+                  id: 'userregister.userName.strength.required',
                 })}
               />,
             )}
@@ -422,10 +407,11 @@ class UserRegister extends Component {
           <FormItem>
             <Button
               size="large"
-              loading={submitting}
+              loading={confirmLoading}
               className={styles.submit}
               type="primary"
-              htmlType="submit"
+              // htmlType="submit"
+              onClick={this.handleSubmit}
             >
               <FormattedMessage id="userregister.register.register" />
             </Button>
@@ -439,7 +425,4 @@ class UserRegister extends Component {
   }
 }
 
-export default connect(({ userRegister, loading }) => ({
-  userRegister,
-  submitting: loading.effects['userRegister/submit'],
-}))(Form.create()(UserRegister));
+export default connect()(Form.create()(UserRegister));

@@ -24,7 +24,7 @@ class Topic extends Component{
     dispatch({
       type: 'topic/fetchTopics',
       payload: {
-        topicType,
+        type: topicType,
         currentPage,
         pageSize
       }
@@ -48,15 +48,20 @@ class Topic extends Component{
                                             </div>
                                         </h2>
                                         <div className="RichContent is-collapsed">
-                                            <div className="RichContent-cover">
-                                                <div className="RichContent-cover-inner">
-                                                    <img src="https://pic2.zhimg.com/50/v2-1bdf7ca65cacd6044c6ec0c76d698935_400x224.jpg" alt="cover" />
-                                                </div>
-                                            </div>
+                                            {
+                                                item.title_image ? 
+                                                    <div className="RichContent-cover">
+                                                        <div className="RichContent-cover-inner">
+                                                            <img src={item.title_image} alt="cover" />
+                                                        </div>
+                                                    </div>
+                                            : null
+                                            }
                                             <div className="RichContent-inner">
-                                                <span className="RichText ztext CopyrightRichText-richText">
-                                                    <StrSubstringPipe textlength={120} content={item.content} />
-                                                </span>
+                                                <div 
+                                                className="RichText ztext CopyrightRichText-richText"
+                                                dangerouslySetInnerHTML={{ __html: item.content }}
+                                                  />
                                                 <button type="button" className="Button ContentItem-more Button--plain">阅读全文
                                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>&#8203;
                                                         <svg className="Zi Zi--ArrowDown ContentItem-arrowIcon" fill="currentColor" viewBox="0 0 24 24" width="24" height="24">

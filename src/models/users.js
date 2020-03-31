@@ -1,8 +1,6 @@
-import { queryUsers, queryCurrentUser, getFakeCaptcha, logout, login} from '@/services/users';
-import { setAuthority, clearAuthority, getAuthority} from '@/utils/authority';
+import { queryUsers, queryCurrentUser, register, login} from '@/services/users';
+import { setAuthority, clearAuthority} from '@/utils/authority';
 import { message } from 'antd';
-import { FormattedMessage, formatMessage } from 'umi/locale';
-import { routerRedux } from 'dva';
 
 export default {
   namespace: 'user',
@@ -24,6 +22,10 @@ export default {
           }
         });
       }
+      callback(response);
+    },
+    *register({payload, callback}, { call, put }) {
+      const response = yield call(register, payload);
       callback(response);
     },
     *logout(_, { call, put }) {

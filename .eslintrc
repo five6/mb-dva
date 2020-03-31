@@ -1,6 +1,7 @@
 {
   "extends": "eslint-config-umi",
   "globals": {
-    "API_PREFIX": true
+    "API_PREFIX": true,
+    "COMMON_FILE_URL": true
   }
 }

@@ -58,3 +58,10 @@ export async function getFakeCaptcha() {
     getResponse: true
   });
 }
+
+export async function uploadFile(form) {
+  return request(`/api/v1/files`, {
+    method: 'POST',
+    data: form,
+  });
+}

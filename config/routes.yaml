@@ -6,6 +6,9 @@
 - path: /register
   name: register
   component: ./UserRegister/index
+- path: /topic-edit
+  name: topic-edit
+  component: ./topic/writeTopic
 - path: /
   name: layout
   component: '../layouts/index'
@@ -13,15 +16,12 @@
     - path: /
       name: homepage
       component: ./index
-    - path: /topics
-      name: topics
-      component: ./topic/index
-    - path: /explore
-      name: explore
-      component: ./explore/index
     - path: /topic/:id
       name: topic-detail
       component: ./topic/detail
+    - path: /explore
+      name: explore
+      component: ./explore/index
     - path: /register
       name: register
     - path: /account/center
