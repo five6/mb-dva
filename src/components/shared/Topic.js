@@ -2,16 +2,12 @@ import React, { Component } from 'react';
 
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 import { connect } from 'dva';
-import StrSubstringPipe from './pipes/StrSubstringPipe';
+import TopicBottomActions from './TopicBottomActions';
 class Topic extends Component{
 
   state={
-    topicData: {
-        totalCount: 0,
-        pageSize: 10,
-        currentPage: 1,
-        items: []
-    }
+      // 展开的topic
+    expandings: {}
   }
 
   componentDidMount() {
@@ -21,6 +17,9 @@ class Topic extends Component{
   fetchTopicData = (currentPage) => {
     const {dispatch, topicType} = this.props;
     const { typeTopics: { pageSize } } = this.props;
+    this.setState({
+        expandings: {}
+    })
     dispatch({
       type: 'topic/fetchTopics',
       payload: {
@@ -31,8 +30,25 @@ class Topic extends Component{
     })
   }
 
+  expandTopic = (id) => {
+    const { expandings } = this.state;
+    expandings[id] = true;
+    this.setState({
+        expandings
+    })
+  }
+
+  collapsedopic = (id) => {
+    const { expandings } = this.state;
+    expandings[id] = false;
+    this.setState({
+        expandings
+    })
+  }
+
   render() {
-    const { typeTopics: { items =[], totalCount = 0, pageSize = 10, currentPage = 1}} = this.props;  
+    const { typeTopics: { items =[], totalCount = 0, pageSize = 10, currentPage = 1}} = this.props; 
+    const { expandings } = this.state;
     return(
         <div className="TopstoryContent">
             <div className="ListShortcut">
@@ -40,14 +56,74 @@ class Topic extends Component{
                     <div>
                         {
                             items.map((item, index) => {
+                                item.author = {avatarUrl: 'http://localhost:7000/api/v1/files/5e822fa21df4ad4da5839d91'};
                                 return(
                                     <div key={item._id} className="Card TopstoryItem TopstoryItem-isRecommend">
                                         <h2 className="ContentItem-title">
                                             <div>
-                                                <a target="_blank" data-za-detail-view-element_name="Title" data-za-detail-view-id="2812" href="/question/27145069/answer/678977385">{item.title}</a>
+                                                <a href={`/topics/${item._id}`}>{item.title}</a>
                                             </div>
                                         </h2>
-                                        <div className="RichContent is-collapsed">
+                                        {
+                                        expandings[item._id] ?
+                                        <div className="ContentItem-meta">
+                                            <div className="AuthorInfo ArticleItem-authorInfo AuthorInfo--plain">
+                                                <span children="UserLink AuthorInfo-avatarWrapper">
+                                                    <div className="Popover">
+                                                       <div>
+                                                            <a className="UserLink-link" href={`/people/${item.author.username}`} >
+                                                                <img alt="avatarUrl" src={item.author.avatarUrl} style={{with: '24px', height: '24px'}} className="Avatar AuthorInfo-avatar" />
+                                                            </a>
+                                                                
+                                                        </div> 
+                                                    </div>
+                                                </span>
+                                                <div className="AuthorInfo-content">
+                                                    <div className="AuthorInfo-head">
+                                                        <span className="UserLink AuthorInfo-name">
+                                                            <div className="Popover">
+                                                                <div>
+                                                                    <a className="UserLink-link" href={`/people/${item.author.username}`}>烟雨江南</a>
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                    <div className="AuthorInfo-detail">
+                                                        <div className="AuthorInfo-badge">
+                                                            <div className="ztext AuthorInfo-badgeText">
+                                                                程序员
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>: null
+                                        }
+                                       
+                                        {
+                                            expandings[item._id] ? 
+                                            <div className="RichContent">
+                                                <div>
+                                                   <div className="ArticleItem-extraInfo">
+                                                        <span className="Voters">
+                                                            <button type="button" className="Button Button--plain">9 人赞同了该文章</button>
+                                                        </span>
+                                                    </div>
+                                                    {
+                                                        item.title_image ?
+                                                        <img className="ArticleItem-image" src={item.title_image} alt="Event loop"></img>
+                                                        :  null
+                                                    }
+                                                </div>
+                                                <div className="RichContent-inner">
+                                                    <span  
+                                                        className="RichText ztext CopyrightRichText-richText"
+                                                        dangerouslySetInnerHTML={{ __html: item.content }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            : 
+                                            <div className="RichContent is-collapsed">
                                             {
                                                 item.title_image ? 
                                                     <div className="RichContent-cover">
@@ -59,46 +135,18 @@ class Topic extends Component{
                                             }
                                             <div className="RichContent-inner">
                                                 <div 
-                                                className="RichText ztext CopyrightRichText-richText"
-                                                dangerouslySetInnerHTML={{ __html: item.content }}
+                                                    className="RichText ztext CopyrightRichText-richText"
+                                                    dangerouslySetInnerHTML={{ __html: item.content }}
                                                   />
-                                                <button type="button" className="Button ContentItem-more Button--plain">阅读全文
+                                                <button onClick={() => this.expandTopic(item._id)} type="button" className="Button ContentItem-more Button--plain">阅读全文
                                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>&#8203;
-                                                        <svg className="Zi Zi--ArrowDown ContentItem-arrowIcon" fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
-                                                        <path d="M12 13L8.285 9.218a.758.758 0 0 0-1.064 0 .738.738 0 0 0 0 1.052l4.249 4.512a.758.758 0 0 0 1.064 0l4.246-4.512a.738.738 0 0 0 0-1.052.757.757 0 0 0-1.063 0L12.002 13z" fillRule="evenodd"></path></svg>
+                                                        <Icon type="down" />
                                                     </span>
                                                 </button>
                                             </div>
                                         </div>
-                                        <div className="ContentItem-actions">
-                                            <div className="ContentItem-actions ZVideoToolbar ContentItem-action ZVideoItem-toolbar">
-                                                <span >
-                                                    <button className="Button VoteButton VoteButton--up" type="button">
-                                                        <Icon type="caret-up" />
-                                                        赞同 3961 
-                                                    </button>
-                                                    {/* <button className="Button VoteButton VoteButton--up is-active" type="button">
-                                                        <Icon type="caret-up" />
-                                                        已赞同 3962
-                                                    </button> */}
-                                                    <button className="Button VoteButton VoteButton--down" type="button">
-                                                        <Icon type="caret-down" />
-                                                    </button>
-                                                </span>
-                                                <button className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
-                                                    <Icon type="message" theme="filled"/>
-                                                    613 条评论
-                                                </button>
-                                                <button className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
-                                                    <Icon type="star"  theme="filled"/>
-                                                    收藏
-                                                </button>
-                                                <button className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
-                                                    <Icon type="heart" theme="filled" />
-                                                    喜欢
-                                                </button>
-                                            </div>
-                                        </div>
+                                        }
+                                        <TopicBottomActions isCollapsed={expandings[item._id]} collapsedopic={this.collapsedopic} topic={item} />
                                     </div>
                                 )
                             })
