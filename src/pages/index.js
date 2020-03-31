@@ -4,13 +4,9 @@ import { Component } from 'react';
 
 import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 
-import Topic from '@/components/shared/Topic';
-// import TopicDetail from '@/components/shared/TopicDetail';
-import GlobalSideBar from '@/components/shared/GlobalSideBar';
+import Topics from '@/components/shared/Topic/Topics';
+import GlobalSideBar from '@/components/shared/Topic/TopicGlobalSideBar';
 
-
-
-const { TabPane } = Tabs;
 
 class Index extends Component{
 
@@ -22,11 +18,11 @@ class Index extends Component{
           <div className="Topstory">
             <div className="Topstory-container">
                 <div className="Topstory-mainColumn">
-                  <a href="https://www.zhihu.com/special/19681091" target="_blank" className="css-w3ttmg">
-                    <img src="https://pic2.zhimg.com/v2-6e8fccc8a30e8cf15a90e7a894011579_r.jpg" className="css-vnkjjr"></img>
+                  <a href="https://www.zhihu.com/special/19681091" className="css-w3ttmg">
+                    <img alt="广告" src="https://pic2.zhimg.com/v2-6e8fccc8a30e8cf15a90e7a894011579_r.jpg" className="css-vnkjjr"></img>
                   </a>
                  <div className="Topstory-mainColumnCard">
-                  <Topic typeTopics={typeTopics} />
+                  <Topics typeTopics={typeTopics} />
                 </div>
               </div>
               <div className="GlobalSideBar">

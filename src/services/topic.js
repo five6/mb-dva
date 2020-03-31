@@ -63,3 +63,16 @@ export async function fetchTopicType(payload) {
     },
   })
 }
+
+export async function fetchTopicDetail(id) {
+  return request(`${apiPrefix}/topics/detail`, {
+    params: {
+      id
+    },
+    method: 'GET',
+    headers: {
+      Accept: "application/json"
+    },
+  })
+}
+

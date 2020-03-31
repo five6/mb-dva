@@ -13,7 +13,7 @@ class GlobalSideBar extends Component{
         <div>
         <div className="Sticky">
             <div className="Card GlobalWrite">
-              <a href="/topic-edit" className="GlobalWrite-navItem">
+              <a href="/topics/topic-edit" className="GlobalWrite-navItem">
                 <Icon className="Zi Zi--Paper GlobalWrite-navIcon" type="file-text" theme="filled" />
                 <div className="GlobalWrite-navTitle">发布话题</div>
               </a>

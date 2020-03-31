@@ -1,31 +1,26 @@
 
 
 - path: /login
-  name: login
   component: ./UserLogin/index
 - path: /register
-  name: register
   component: ./UserRegister/index
-- path: /topic-edit
-  name: topic-edit
-  component: ./topic/writeTopic
+- path: /topics
+  routes: 
+    - path: /topics/topic-edit
+      component: ./topic/writeTopic
+    - path: /topics/:id
+      component: ./topic/detail
 - path: /
-  name: layout
   component: '../layouts/index'
   routes:
     - path: /
-      name: homepage
       component: ./index
     - path: /topic/:id
-      name: topic-detail
       component: ./topic/detail
     - path: /explore
-      name: explore
       component: ./explore/index
     - path: /register
-      name: register
     - path: /account/center
-      name: account-center
       component: ./account/center
     - component: Exception404
 

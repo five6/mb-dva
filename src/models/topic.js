@@ -1,10 +1,11 @@
-import { fetchTopics, fetchTopicReply, createTopic, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
+import { fetchTopics, fetchTopicReply, createTopic, fetchTopicDetail, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
 import { setAuthority, clearAuthority } from '@/utils/authority';
 
 export default {
   namespace: 'topic',
 
   state: {
+    topicDetail: {},
     topicTypes: [],
     topicDatas: {
         all: {
@@ -88,9 +89,22 @@ export default {
         const response = yield call(deleteReply, payload);
         callback(response);
     },
+    *fetchTopicDetail({payload}, {call, put}) {
+      const response = yield call(fetchTopicDetail, payload);
+      yield put({
+        type: 'saveTopicDetail',
+        payload: response.datas,
+      });
+    }
   },
 
   reducers: {
+    saveTopicDetail(state, { payload }) {
+      return {
+        ...state,
+        topicDetail: payload
+      }
+    },
     saveTopicTypes(state, { payload }) {
       return {
         ...state,

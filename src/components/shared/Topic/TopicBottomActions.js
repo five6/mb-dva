@@ -10,13 +10,13 @@ class TopicBottomActions extends Component{
     }
   }
 
-  collapsedopic = (id) => {
-      const {collapsedopic, topic} = this.props;
-      collapsedopic(topic._id);
+  collapseTopic = (id) => {
+      const {collapseTopic, topic} = this.props;
+      collapseTopic(topic._id);
   }
 
   render() {
-    const { isCollapsed } = this.props;
+    const { isCollapsed, noCollapseAction } = this.props;
     return(
         <div className="ContentItem-actions">
             <div className="ContentItem-actions ZVideoToolbar ContentItem-action ZVideoItem-toolbar">
@@ -46,8 +46,8 @@ class TopicBottomActions extends Component{
                     喜欢
                 </button>
                 {
-                    isCollapsed ? 
-                    <button onClick={this.collapsedopic} type="button" className="Button ContentItem-action ContentItem-rightButton Button--plain">
+                    isCollapsed  && ! noCollapseAction? 
+                    <button onClick={this.collapseTopic} type="button" className="Button ContentItem-action ContentItem-rightButton Button--plain">
                     <span className="RichContent-collapsedText">收起</span>
                     <span style={{display: 'inline-flex', alignItems: 'center'}}>&#8203;
                         <Icon type="up" />

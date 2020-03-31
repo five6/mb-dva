@@ -13,6 +13,7 @@ import QuillEmoji from 'quill-emoji';
 import 'quill-emoji/dist/quill-emoji.css';
 import { common_file_url } from '@/utils/api.prefix';
 import { getToken } from '@/services/authorityService';
+import { getLoginUserInfo } from '@/utils/authority';
 import * as _ from 'lodash';
 
 const FormItem = Form.Item;
@@ -26,6 +27,13 @@ class WriteTopic extends Component{
     topicName: '',
     topicType: 'share',
     topicLevel: 'public'
+  }
+
+  componentWillMount() {
+    const userInfo = getLoginUserInfo();
+    if(!userInfo) {
+      router.push('/login');
+    }
   }
 
   componentDidMount() {
@@ -106,6 +114,14 @@ class WriteTopic extends Component{
   onSubmit = () => {
     const { dispatch } = this.props;
     const {topicName, titleImageUrl, topicContent, topicType, topicLevel } = this.state;
+    if(!topicName) {
+      message.info('请输入标题！');
+      return;
+    }
+    if(!_.trim(topicContent).length) {
+      message.info('请输入正文！');
+      return;
+    }
     dispatch({
       type: 'topic/createTopic',
       payload: {

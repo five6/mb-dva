@@ -4,7 +4,7 @@ import { primaryColor } from './defaultSettings';
 
 export default {
   define: {
-    'process.env.API_PREFIX': 'api/v1/frontend',
+    'process.env.API_PREFIX': '/api/v1/frontend',
   },
   theme: {
     'primary-color': primaryColor,
