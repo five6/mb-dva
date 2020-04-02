@@ -5,7 +5,7 @@
 - path: /register
   component: ./UserRegister/index
 - path: /topics
-  routes: 
+  routes:
     - path: /topics/topic-edit
       component: ./topic/writeTopic
     - path: /topics/:id

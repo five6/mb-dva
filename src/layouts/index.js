@@ -61,7 +61,7 @@ class BasicLayout extends Component {
     const props = {
       currentUser: {},
       onMenuClick: this.handleMenuClick,
-    } 
+    }
 
     return (
       // <div className={styles.normal}>

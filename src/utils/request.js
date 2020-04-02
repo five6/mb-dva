@@ -1,4 +1,3 @@
-import { getRosMessageByCode } from '@/utils/common.utils';
 import { getToken } from '@/services/authorityService';
 import { formatMessage } from 'umi-plugin-react/locale';
 
@@ -42,14 +41,11 @@ const errorHandler = error => {
     }
   }
 
-  if (!data.code) {
-    notification.error({
-      message: `${formatMessage({ id: 'app.request.error' })} ${status}: ${url}`,
-      description: errortext,
-    });
-  } else
-    notification.error(getRosMessageByCode(data));
-};
+  notification.error({
+    message: `${formatMessage({ id: 'app.request.error' })} ${status}: ${url}`,
+    description: errortext,
+  });
+}
 
 /**
  * 配置request请求时的默认参数

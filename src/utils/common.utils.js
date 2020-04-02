@@ -1,22 +1,13 @@
-import { getLocale } from 'umi-plugin-react/locale';
-import { getRosMessage } from '@/utils/authority';
+
+import { common_avatar_url, common_file_url } from '@/utils/api.prefix';
 
 module.exports = {
 
-  getRosMessageByCode(data) {
-    const lang = getLocale() || 'en-US';
-    const messageList = getRosMessage();
-    const code = data.code;
-    const message = messageList ? (messageList[code] ? messageList[code][lang] : '') : '';
-    if(message) {
-      return {
-        message,
-        description:`${message}(${data.code})`
-      }
-    }
-    return {
-        message: `${data.msg}(${data.code})`,
-        description: '',
+  getAvatar(author) {
+    if(author.useDefaultAvatarUrl) {
+      return common_avatar_url + author.avatarUrl;
+    } else {
+      return common_file_url + '/' + author.avatarUrl;
     }
   }
 }

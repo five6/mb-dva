@@ -5,7 +5,7 @@ import { Component } from 'react';
 import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 
 import Topics from '@/components/shared/Topic/Topics';
-import GlobalSideBar from '@/components/shared/Topic/TopicGlobalSideBar';
+import GlobalSideBar from '@/components/shared/Topic/components/RightSideBar';
 
 
 class Index extends Component{

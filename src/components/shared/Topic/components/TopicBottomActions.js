@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 
 
-class TopicBottomActions extends Component{
+class BottomActions extends Component{
 
   state={
     blogInfo: {
@@ -61,4 +61,4 @@ class TopicBottomActions extends Component{
 
 }
 
-export default TopicBottomActions;
+export default BottomActions;

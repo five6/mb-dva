@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 
-import TopicBottomActions from './TopicBottomActions';
+import TopicBottomActions from './components/TopicBottomActions';
+import Comment from './components/Comment';
+import {getAvatar} from '@/utils/common.utils';
 
 class Topic extends Component{
 
@@ -36,7 +38,7 @@ class Topic extends Component{
                         <div className="Popover">
                             <div>
                                 <a className="UserLink-link" href={`/people/${topic.author.username}`} >
-                                    <img alt="avatarUrl" src={topic.author.avatarUrl} style={{with: '24px', height: '24px'}} className="Avatar AuthorInfo-avatar" />
+                                    <img alt="avatarUrl" src={getAvatar(topic.author)} style={{with: '24px', height: '24px'}} className="Avatar AuthorInfo-avatar" />
                                 </a>
                                     
                             </div> 
@@ -55,7 +57,7 @@ class Topic extends Component{
                         <div className="AuthorInfo-detail">
                             <div className="AuthorInfo-badge">
                                 <div className="ztext AuthorInfo-badgeText">
-                                    程序员
+                                    {topic.author.job}
                                 </div>
                             </div>
                         </div>
@@ -130,63 +132,7 @@ class Topic extends Component{
                             {
                                 [1,2,3].map(item => {
                                     return(
-                                        <ul key={item} className="NestComment">
-                                            <li key={item} className="NestComment--rootCommentNoChild">
-                                                <div className="CommentItemV2">
-                                                    <div>
-                                                    <div className="CommentItemV2-meta">
-                                                        <span className="UserLink CommentItemV2-avatar">
-                                                        <div className="Popover">
-                                                            <div>
-                                                            <a href="" className="UserLink-link">
-                                                                <img alt="烟雨江南" style={{width: '24px', height: '24px'}} src="https://pic1.zhimg.com/bae97d0aa88ce01f4daa45e97af7d49e_im.jpg" className="Avatar UserLink-avatar"/>
-                                                            </a>
-                                                            </div>
-                                                        </div>
-                                                        </span>
-                                                        <span className="UserLink">
-                                                        <a className="UserLink-link">昨夜星辰</a>
-                                                        </span>
-                                                        <span className="CommentItemV2-roleInfo">
-                                                        (作者) 
-                                                        </span>
-                                                        <span className="CommentItemV2-time">
-                                                        2019-01-02
-                                                        </span>
-                                                    </div>
-                                                    <div className="CommentItemV2-metaSibling">
-                                                        <div className="CommentRichText CommentItemV2-content">
-                                                        <div className="RichText ztext">
-                                                        官方介绍到，Microsoft 365 消费者订阅将包含两种版本——个人版和家庭版。已有的 Office 365 订阅用户将免费升级迁移至 Microsoft 365，订阅价格不变，中国大陆个人版每年 398 元，家庭版每年 498 元（最多包含 6 名用户）
-                                                        </div>
-                                                        </div>
-                                                        <div className="CommentItemV2-footer">
-                                                        <button className="Button CommentItemV2-likeBtn Button--plain">
-                                                            <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                                            <Icon type="like" />赞
-                                                            </span>
-                                                        </button>
-                                                        <button className="Button CommentItemV2-likeBtn Button--plain">
-                                                            <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                                            <Icon type="like" />回复
-                                                            </span>
-                                                        </button>
-                                                        <button className="Button CommentItemV2-likeBtn Button--plain">
-                                                            <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                                            <Icon type="like" />踩
-                                                            </span>
-                                                        </button>
-                                                        <button className="Button CommentItemV2-likeBtn Button--plain">
-                                                            <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                                            <Icon type="like" />举报
-                                                            </span>
-                                                        </button>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                        <Comment key={item} />
                                     )
                                 })
                             }
@@ -196,7 +142,7 @@ class Topic extends Component{
                       <div className="CommentsV2-footer CommentEditorV2--normal CommentEditorV2--active">
                         <div className="CommentEditorV2-inputWrap CommentEditorV2-inputWrap--active">
                           <div className="InputLike CommentEditorV2-input Editable">
-                            <div contentEditable className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
+                            <div contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
 
                             </div>
                           </div>

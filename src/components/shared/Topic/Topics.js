@@ -57,7 +57,6 @@ class Topics extends Component{
                     <div>
                         {
                             items.map((item, index) => {
-                                item.author = {};
                                 return <Topic key={item._id} expandTopic={this.expandTopic} collapseTopic={this.collapseTopic} expanded={expandings[item._id]} topic={item} />
                             })
                         }

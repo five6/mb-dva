@@ -114,7 +114,7 @@ export default {
     saveTopicData(state, { payload: { queryCond, result } }) {
       const tab = queryCond.topicType || 'all';
       const data = { ...state.topicDatas[tab] };
-      
+
       data.items = result.items;
       data.currentPage = queryCond.currentPage;
       data.totalCount = result.totalCount;

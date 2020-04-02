@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
 
 
-class GlobalSideBar extends Component{
+class RightSideBar extends Component{
 
   state={
    
@@ -109,4 +109,4 @@ class GlobalSideBar extends Component{
 
 }
 
-export default GlobalSideBar;
+export default RightSideBar;
