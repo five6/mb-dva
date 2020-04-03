@@ -15,23 +15,21 @@ export async function createTopic(data) {
 
 
 export async function fetchTopicReply(payload) {
-  const {id, params} = payload;
-  return request(`${apiPrefix}/topics/${id}/reply`, {
+  return request(`${apiPrefix}/comments`, {
     method: 'GET',
-    params,
+    params: payload,
   });
 }
 
 export async function createReply(payload) {
-  const { id, reply } = payload;
-  return request(`${apiPrefix}/topics/${id}/reply`, {
+  return request(`${apiPrefix}/comments`, {
     method: 'POST',
-    data: reply
+    data: payload
   });
 }
 
 export async function deleteReply(id) {
-  return request(`${apiPrefix}/topics/${id}/reply`, {
+  return request(`${apiPrefix}/comments/${id}`, {
     method: 'DELETE'
   });
 }

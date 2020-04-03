@@ -4,11 +4,20 @@ import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography,
 import TopicBottomActions from './components/TopicBottomActions';
 import Comment from './components/Comment';
 import {getAvatar} from '@/utils/common.utils';
+import { connect } from 'dva';
+import { fetchTopicReply } from '@/services/topic'
 
 class Topic extends Component{
 
   state={
-
+    showComment: false,
+    sort_time: '', // 排序方式
+    commentDatas: {
+      items: [],
+      currentPage: 1,
+      pageSize: 10,
+      totalCount: 0
+    }
   }
 
   expandTopic = (id) => {
@@ -21,8 +30,46 @@ class Topic extends Component{
     collapseTopic(id);
   }
 
+  onClickTopicAction = (type, onlySort) => {
+    const self = this;
+    const { showComment, sort_time } = this.state;
+    const { topic } = this.props;
+    if('showComment' === type) {
+      if(!onlySort)
+        this.setState({
+          showComment: !showComment
+        })
+      if(!showComment || onlySort) {
+        fetchTopicReply({
+          topic_id: topic._id,
+          sort_time
+        }).then(res => {
+          const {currentPage, pageSize} = self.state.commentDatas;
+          const {items, totalCount} = res;
+          self.setState({
+            commentDatas: {
+              items,
+              currentPage,
+              totalCount,
+              pageSize
+            }
+          })
+        })
+      }
+    }
+  }
+
+  onClickChangeOrderType = () => {
+    const {sort_time} = this.state;
+      this.setState({
+        sort_time:  ! sort_time
+      });
+      this.onClickTopicAction('showComment', true);
+  }
+
   render() {
     const { topic = {}, expanded, noCollapseAction } = this.props;
+    const { showComment, sort_time, commentDatas } = this.state;
     return(
         <div className="Card TopstoryItem TopstoryItem-isRecommend">
             <h2 className="ContentItem-title">
@@ -40,8 +87,8 @@ class Topic extends Component{
                                 <a className="UserLink-link" href={`/people/${topic.author.username}`} >
                                     <img alt="avatarUrl" src={getAvatar(topic.author)} style={{with: '24px', height: '24px'}} className="Avatar AuthorInfo-avatar" />
                                 </a>
-                                    
-                            </div> 
+
+                            </div>
                         </div>
                     </span>
                     <div className="AuthorInfo-content">
@@ -65,14 +112,14 @@ class Topic extends Component{
                 </div>
             </div>: null
             }
-            
+
             {
-                expanded ? 
+                expanded ?
                 <div className="RichContent">
                     <div>
                         <div className="ArticleItem-extraInfo">
                             <span className="Voters">
-                                <button type="button" className="Button Button--plain">9 人赞同了该文章</button>
+                              <button type="button" className="Button Button--plain">{topic.upvoteCount}人赞同了该文章</button>
                             </span>
                         </div>
                         {
@@ -82,16 +129,16 @@ class Topic extends Component{
                         }
                     </div>
                     <div className="RichContent-inner">
-                        <span  
+                        <span
                             className="RichText ztext CopyrightRichText-richText"
                             dangerouslySetInnerHTML={{ __html: topic.content }}
                         />
                     </div>
                 </div>
-                : 
+                :
                 <div className="RichContent is-collapsed">
                 {
-                    topic.title_image ? 
+                    topic.title_image ?
                         <div className="RichContent-cover">
                             <div className="RichContent-cover-inner">
                                 <img src={topic.title_image} alt="cover" />
@@ -100,7 +147,7 @@ class Topic extends Component{
                 : null
                 }
                 <div className="RichContent-inner">
-                    <div 
+                    <div
                         className="RichText ztext CopyrightRichText-richText"
                         dangerouslySetInnerHTML={{ __html: topic.content }}
                         />
@@ -112,17 +159,28 @@ class Topic extends Component{
                 </div>
             </div>
             }
-            <TopicBottomActions noCollapseAction={noCollapseAction} isCollapsed={expanded} collapseTopic={this.collapseTopic} topic={topic} />
-            <div className="Comments-container">
+            <TopicBottomActions
+              noCollapseAction={noCollapseAction}
+              isCollapsed={expanded}
+              collapseTopic={this.collapseTopic}
+              onClickTopicAction = {this.onClickTopicAction}
+              topic={topic}
+            />
+            {
+              ! showComment ? null :
+              <div className="Comments-container">
                 <div className="CommentsV2 CommentsV2--withEditor CommentsV2-withPagination">
                     <div className="Topbar CommentTopbar">
                         <div className="Topbar-title">
-                            <h2 className="CommentTopbar-title">2 条评论</h2>
+                          <h2 className="CommentTopbar-title">{commentDatas.totalCount}条评论</h2>
                         </div>
                         <div className="Topbar-options">
-                            <button className="Button Button--plain Button--withIcon Button--withLabel">
+                            <button onClick={this.onClickChangeOrderType} className="Button Button--plain Button--withIcon Button--withLabel">
                             <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                <Icon type="swap" />切换为时间排序
+                                <Icon type="swap" />
+                                {
+                                  sort_time ?  '切换为时间排序': '切换为默认排序'
+                                }
                             </span>
                             </button>
                         </div>
@@ -152,10 +210,12 @@ class Topic extends Component{
                     </div>
                 </div>
             </div>
+            }
+
         </div>
     )
   }
 
 }
 
-export default Topic;
+export default connect()(Topic);;

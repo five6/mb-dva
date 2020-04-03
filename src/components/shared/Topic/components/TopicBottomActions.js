@@ -15,15 +15,21 @@ class BottomActions extends Component{
       collapseTopic(topic._id);
   }
 
+  onClickTopicAction = (type) => {
+    const { onClickTopicAction } = this.props;
+    onClickTopicAction(type);
+  }
+
   render() {
-    const { isCollapsed, noCollapseAction } = this.props;
+    const { isCollapsed, noCollapseAction, topic } = this.props;
+    const { topicExtra = {}  } = topic;
     return(
         <div className="ContentItem-actions">
             <div className="ContentItem-actions ZVideoToolbar ContentItem-action ZVideoItem-toolbar">
                 <span >
                     <button className="Button VoteButton VoteButton--up" type="button">
                         <Icon type="caret-up" />
-                        赞同 3961 
+                        赞同 {topic.upvoteCount}
                     </button>
                     {/* <button className="Button VoteButton VoteButton--up is-active" type="button">
                         <Icon type="caret-up" />
@@ -33,11 +39,11 @@ class BottomActions extends Component{
                         <Icon type="caret-down" />
                     </button>
                 </span>
-                <button className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
+                <button onClick={() => this.onClickTopicAction('showComment')} className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
                     <Icon type="message" theme="filled"/>
-                    613 条评论
+                    {topicExtra.commentCount}条评论
                 </button>
-                <button className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
+                <button onClick={() => this.onClickTopicAction('followingTopic')} className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
                     <Icon type="star"  theme="filled"/>
                     收藏
                 </button>
@@ -46,7 +52,7 @@ class BottomActions extends Component{
                     喜欢
                 </button>
                 {
-                    isCollapsed  && ! noCollapseAction? 
+                    isCollapsed  && ! noCollapseAction?
                     <button onClick={this.collapseTopic} type="button" className="Button ContentItem-action ContentItem-rightButton Button--plain">
                     <span className="RichContent-collapsedText">收起</span>
                     <span style={{display: 'inline-flex', alignItems: 'center'}}>&#8203;
