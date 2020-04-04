@@ -90,7 +90,10 @@ class Commment extends Component{
                               <a className="UserLink-link">{comment.from_author.username}</a>
                             </span>
                             <span className="CommentItemV2-roleInfo">
-                            (作者)
+                              {
+                                topic.author._id === comment.from_author._id ?
+                                ('(作者)'): null
+                              }
                             </span>
                             <span className="CommentItemV2-time">
                               <Moment date={comment.from_author.createTime} format="YYYY-MM-DD" />
