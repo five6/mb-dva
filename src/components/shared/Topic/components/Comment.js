@@ -1,19 +1,76 @@
 import React, { Component } from 'react';
-
-import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
-
 import { connect } from 'dva';
+import Moment from 'react-moment';
+import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row, message } from 'antd';
+import {getAvatar} from '@/utils/common.utils';
+import * as _ from 'lodash';
 class Commment extends Component{
 
   state={
+    showExtraButtons: false,
+    showReplyInput: false,
+    content: ''
   }
 
   componentDidMount() {
   }
 
-  
+  onButtonMouseEnter = () => {
+    this.setState({
+      showExtraButtons: true
+    })
+  }
+
+  onButtonsMouseLeave = () => {
+    this.setState({
+      showExtraButtons: false
+    })
+  }
+
+  onClickReply = () => {
+    const {showReplyInput} = this.state;
+    this.setState({
+      showReplyInput: !showReplyInput
+    })
+  }
+
+  onContentChange = (e) => {
+    this.setState({
+      content: _.trim(e.target.innerText)
+    })
+  }
+
+  onSubmit = () => {
+    const { topic, comment, dispatch } = this.props;
+    const { content } = this.state;
+    const self = this;
+    dispatch({
+      type: 'topic/createReply',
+      payload: {
+        topic_id:topic._id,
+        to_uid: comment.from_author._id,
+        reply_level: 2,
+        parent_reply_id:comment._id,
+        content
+      },
+      callback(res) {
+        if(res.code === 0) {
+          self.setState({
+            content: 0,
+            showReplyInput: false
+          })
+          message.success('回复成功');
+        } else {
+          message.error(res.msg);
+        }
+      }
+    })
+  }
+
 
   render() {
+    const { comment } = this.props;
+    const { showExtraButtons, showReplyInput , content} = this.state;
     return(
         <ul className="NestComment">
             <li className="NestComment--rootCommentNoChild">
@@ -24,49 +81,73 @@ class Commment extends Component{
                             <div className="Popover">
                                 <div>
                                 <a href="" className="UserLink-link">
-                                    <img alt="烟雨江南" style={{width: '24px', height: '24px'}} src="https://pic1.zhimg.com/bae97d0aa88ce01f4daa45e97af7d49e_im.jpg" className="Avatar UserLink-avatar"/>
+                                    <img alt={comment.from_author.username} style={{width: '24px', height: '24px'}} src={getAvatar(comment.from_author)} className="Avatar UserLink-avatar"/>
                                 </a>
                                 </div>
                             </div>
                             </span>
                             <span className="UserLink">
-                            <a className="UserLink-link">昨夜星辰</a>
+                              <a className="UserLink-link">{comment.from_author.username}</a>
                             </span>
                             <span className="CommentItemV2-roleInfo">
-                            (作者) 
+                            (作者)
                             </span>
                             <span className="CommentItemV2-time">
-                            2019-01-02
+                              <Moment date={comment.from_author.createTime} format="YYYY-MM-DD" />
                             </span>
                         </div>
                         <div className="CommentItemV2-metaSibling">
                             <div className="CommentRichText CommentItemV2-content">
                                 <div className="RichText ztext">
-                                官方介绍到，Microsoft 365 消费者订阅将包含两种版本——个人版和家庭版。已有的 Office 365 订阅用户将免费升级迁移至 Microsoft 365，订阅价格不变，中国大陆个人版每年 398 元，家庭版每年 498 元（最多包含 6 名用户）
+                                  {comment.content}
                                 </div>
                             </div>
-                            <div className="CommentItemV2-footer">
+                            <div onMouseEnter={this.onButtonMouseEnter} onMouseLeave={this.onButtonsMouseLeave} className="CommentItemV2-footer">
                                 <button className="Button CommentItemV2-likeBtn Button--plain">
                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                     <Icon type="like" />赞
                                     </span>
                                 </button>
-                                <button className="Button CommentItemV2-likeBtn Button--plain">
-                                    <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                    <Icon type="like" />回复
+                                {
+                                  showExtraButtons ?
+                                  (
+                                    <span>
+                                        <button onClick={this.onClickReply}  className="Button CommentItemV2-likeBtn Button--plain">
+                                        <span style={{display: 'inline-flex', alignItems: 'center'}}>
+                                          <Icon type="message" />
+                                          {
+                                            showReplyInput ? '取消回复': '回复'
+                                          }
+                                        </span>
+                                    </button>
+                                    <button className="Button CommentItemV2-likeBtn Button--plain">
+                                        <span style={{display: 'inline-flex', alignItems: 'center'}}>
+                                        <Icon type="dislike" />踩
+                                        </span>
+                                    </button>
+                                    <button className="Button CommentItemV2-likeBtn Button--plain">
+                                        <span style={{display: 'inline-flex', alignItems: 'center'}}>
+                                        <Icon type="safety" />举报
+                                        </span>
+                                    </button>
                                     </span>
-                                </button>
-                                <button className="Button CommentItemV2-likeBtn Button--plain">
-                                    <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                    <Icon type="like" />踩
-                                    </span>
-                                </button>
-                                <button className="Button CommentItemV2-likeBtn Button--plain">
-                                    <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                                    <Icon type="like" />举报
-                                    </span>
-                                </button>
+                                  ): null
+                                }
                             </div>
+                            {
+                              showReplyInput ?
+                              <div>
+                                <div className="CommentsV2-footer CommentEditorV2--normal CommentEditorV2--active">
+                                  <div className="CommentEditorV2-inputWrap CommentEditorV2-inputWrap--active">
+                                    <div className="InputLike CommentEditorV2-input Editable">
+                                      <div onKeyUp={this.onContentChange} contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button onClick={this.onSubmit} disabled={!content} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
+                                </div>
+                              </div>: null
+                            }
                         </div>
                     </div>
                 </div>

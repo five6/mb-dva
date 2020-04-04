@@ -11,7 +11,7 @@ class Topic extends Component{
 
   state={
     showComment: false,
-    sort_time: '', // 排序方式
+    sort_time: false, // 排序方式
     commentDatas: {
       items: [],
       currentPage: 1,
@@ -30,9 +30,9 @@ class Topic extends Component{
     collapseTopic(id);
   }
 
-  onClickTopicAction = (type, onlySort) => {
+  onClickTopicAction = (type, onlySort, sort_time) => {
     const self = this;
-    const { showComment, sort_time } = this.state;
+    const { showComment } = this.state;
     const { topic } = this.props;
     if('showComment' === type) {
       if(!onlySort)
@@ -40,6 +40,8 @@ class Topic extends Component{
           showComment: !showComment
         })
       if(!showComment || onlySort) {
+        if(sort_time === undefined)
+        sort_time = this.state.sort_time;
         fetchTopicReply({
           topic_id: topic._id,
           sort_time
@@ -64,7 +66,11 @@ class Topic extends Component{
       this.setState({
         sort_time:  ! sort_time
       });
-      this.onClickTopicAction('showComment', true);
+      this.onClickTopicAction('showComment', true, !sort_time);
+  }
+
+  submitReply = () => {
+
   }
 
   render() {
@@ -179,7 +185,7 @@ class Topic extends Component{
                             <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                 <Icon type="swap" />
                                 {
-                                  sort_time ?  '切换为时间排序': '切换为默认排序'
+                                  sort_time ?  '切换为默认排序': '切换为时间排序'
                                 }
                             </span>
                             </button>
@@ -188,9 +194,9 @@ class Topic extends Component{
                     <div>
                         <div className="CommentListV2">
                             {
-                                [1,2,3].map(item => {
+                                commentDatas.items.map(item => {
                                     return(
-                                        <Comment key={item} />
+                                        <Comment topic={topic} comment={item} key={item._id} />
                                     )
                                 })
                             }
@@ -205,7 +211,7 @@ class Topic extends Component{
                             </div>
                           </div>
                         </div>
-                        <button className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
+                        <button onClick={this.submitReply} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
                       </div>
                     </div>
                 </div>
