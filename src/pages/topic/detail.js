@@ -37,7 +37,7 @@ class OneTopic extends Component{
   render() {
 
     let { topicDetail } = this.props;
-    topicDetail = topicDetail && topicDetail.author ? topicDetail:  {author: {}, replies: []};
+    topicDetail = topicDetail && topicDetail.from_uid ? topicDetail:  {from_uid: {}, comments: []};
 
     const content = (
       <div>
@@ -80,8 +80,8 @@ class OneTopic extends Component{
                     <span className="UserLink AuthorInfo-avatarWrapper">
                       <div className="Popover">
                         <div>
-                          <a className="UserLink-link" href={`/people/${topicDetail.author.username}`}>
-                            <img alt="" style={{width: '38px', height: '38px'}} className="Avatar Avatar--round AuthorInfo-avatar" src={getAvatar(topicDetail.author)} />
+                          <a className="UserLink-link" href={`/people/${topicDetail.from_uid.username}`}>
+                            <img alt="" style={{width: '38px', height: '38px'}} className="Avatar Avatar--round AuthorInfo-avatar" src={getAvatar(topicDetail.from_uid)} />
                           </a>
                         </div>
                       </div>
@@ -91,7 +91,7 @@ class OneTopic extends Component{
                         <span className="UserLink AuthorInfo-name">
                           <div className="Popover">
                             <div className="UserLink-link">
-                              <a className="UserLink-link" href={`/people/${topicDetail.author.username}`}>{topicDetail.author.username}</a>
+                              <a className="UserLink-link" href={`/people/${topicDetail.from_uid.username}`}>{topicDetail.from_uid.username}</a>
                             </div>
                           </div>
                         </span>
@@ -134,7 +134,7 @@ class OneTopic extends Component{
               <div className="Post-topicsAndReviewer topic-tags-container">
                 <div className="TopicList Post-Topics">
                   {
-                    [1,2,3].map(item => {
+                    (topicDetail.comments || []).map(item => {
                       return(
                         <div key={item} className="Tag Topic">
                           <Popover content={content} title={`标题${item}`} trigger="hover">
@@ -201,9 +201,9 @@ class OneTopic extends Component{
                     <div>
                       <div className="CommentListV2">
                           {
-                            [1,2,3].map(item => {
+                            (topicDetail.comments || []).map(item => {
                               return(
-                                <Comment key={item} />
+                                <Comment coment={item} key={item} />
                               )
                             })
                           }

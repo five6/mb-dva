@@ -1355,6 +1355,15 @@ body {
   position: relative;
 }
 
+.NestComment--rootComment {
+  position: relative;
+}
+
+.NestComment .NestComment--child {
+  position: relative;
+  padding-left: 33px;
+}
+
 .CommentsV2-withPagination .CommentListV2 {
   overflow-y: visible;
 }
@@ -1375,6 +1384,7 @@ body {
   flex-shrink: 0;
   padding: 12px 20px 10px;
   font-size: 15px;
+  border-bottom: 1px solid #f6f6f6;
 }
 
 .CommentItemV2-meta {

@@ -90,8 +90,8 @@ class Topic extends Component{
                     <span children="UserLink AuthorInfo-avatarWrapper">
                         <div className="Popover">
                             <div>
-                                <a className="UserLink-link" href={`/people/${topic.author.username}`} >
-                                    <img alt="avatarUrl" src={getAvatar(topic.author)} style={{with: '24px', height: '24px'}} className="Avatar AuthorInfo-avatar" />
+                                <a className="UserLink-link" href={`/people/${topic.from_uid.username}`} >
+                                    <img alt="avatarUrl" src={getAvatar(topic.from_uid)} style={{with: '24px', height: '24px'}} className="Avatar AuthorInfo-avatar" />
                                 </a>
 
                             </div>
@@ -102,7 +102,7 @@ class Topic extends Component{
                             <span className="UserLink AuthorInfo-name">
                                 <div className="Popover">
                                     <div>
-                                        <a className="UserLink-link" href={`/people/${topic.author.username}`}>烟雨江南</a>
+                                        <a className="UserLink-link" href={`/people/${topic.from_uid.username}`}>烟雨江南</a>
                                     </div>
                                 </div>
                             </span>
@@ -110,7 +110,7 @@ class Topic extends Component{
                         <div className="AuthorInfo-detail">
                             <div className="AuthorInfo-badge">
                                 <div className="ztext AuthorInfo-badgeText">
-                                    {topic.author.job}
+                                    {topic.from_uid.job}
                                 </div>
                             </div>
                         </div>
