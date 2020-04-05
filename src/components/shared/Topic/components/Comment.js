@@ -9,7 +9,12 @@ class Commment extends Component{
   state={
     showExtraButtons: false,
     showReplyInput: false,
-    content: ''
+    subContent: '',
+    content: '',
+    childrenHover: {
+      showInput: false,
+      id: false
+    }
   }
 
   componentDidMount() {
@@ -27,10 +32,48 @@ class Commment extends Component{
     })
   }
 
+  onSubReplyButtonMouseEnter = (_id) => {
+    const {childrenHover } = this.state;
+    this.setState({
+      childrenHover: {
+        showInput: childrenHover.showInput,
+        id: _id
+      }
+    })
+  }
+
+  onSubReplyButtonsMouseLeave = () => {
+    this.setState({
+      childrenHover: {
+        showInput: false,
+        id: false
+      }
+    })
+  }
+
   onClickReply = () => {
     const {showReplyInput} = this.state;
     this.setState({
       showReplyInput: !showReplyInput
+    })
+  }
+
+  onClickSubReply = () => {
+    const {childrenHover} = this.state;
+    if(childrenHover.id) {
+      this.setState({
+        childrenHover: {
+          id: childrenHover.id,
+          showInput: !childrenHover.showInput
+        }
+      })
+      return;
+    }
+    this.setState({
+      childrenHover: {
+        id: !childrenHover.id,
+        showInput: !childrenHover.showInput
+      }
     })
   }
 
@@ -39,6 +82,13 @@ class Commment extends Component{
       content: _.trim(e.target.innerText)
     })
   }
+
+  onSubContentChange = (e) => {
+    this.setState({
+      subContent: _.trim(e.target.innerText)
+    })
+  }
+
 
   onSubmit = () => {
     const { topic, comment, dispatch } = this.props;
@@ -56,7 +106,7 @@ class Commment extends Component{
       callback(res) {
         if(res.code === 0) {
           self.setState({
-            content: 0,
+            content: '',
             showReplyInput: false
           })
           message.success('回复成功');
@@ -67,10 +117,39 @@ class Commment extends Component{
     })
   }
 
+  onSubReplySubmit = (reply) => {
+    const { topic, dispatch, comment } = this.props;
+    const { subContent } = this.state;
+    const self = this;
+    dispatch({
+      type: 'topic/createReply',
+      payload: {
+        topic_id:topic._id,
+        to_uid: reply.from_uid._id,
+        reply_level: 2,
+        parent_reply_id:comment._id,
+        content: subContent
+      },
+      callback(res) {
+        if(res.code === 0) {
+          self.setState({
+            subContent: '',
+            childrenHover: {
+              id: false,
+              showInput: false
+            }
+          })
+          message.success('回复成功');
+        } else {
+          message.error(res.msg);
+        }
+      }
+    })
+  }
 
   render() {
     const { comment , topic} = this.props;
-    const { showExtraButtons, showReplyInput , content} = this.state;
+    const { showExtraButtons, showReplyInput , content, subContent, childrenHover} = this.state;
     return(
         <ul className="NestComment">
             <li className="NestComment--rootComment">
@@ -158,7 +237,8 @@ class Commment extends Component{
             </li>
             {
               comment.children && comment.children.length ?
-                <li className="NestComment--child">
+              comment.children.map(reply => {
+                return  <li key={reply._id}  onMouseLeave={this.onSubReplyButtonsMouseLeave} className="NestComment--child">
                   <div className="CommentItemV2">
                     <div>
                         <div className="CommentItemV2-meta">
@@ -166,47 +246,47 @@ class Commment extends Component{
                             <div className="Popover">
                                 <div>
                                   <a href="" className="UserLink-link">
-                                    <img alt={comment.from_uid.username} style={{width: '24px', height: '24px'}} src={getAvatar(comment.from_uid)} className="Avatar UserLink-avatar"/>
+                                    <img alt={comment.from_uid.username} style={{width: '24px', height: '24px'}} src={getAvatar(reply.from_uid)} className="Avatar UserLink-avatar"/>
                                   </a>
                                 </div>
                             </div>
                           </span>
                           <span className="UserLink">
                                 <a href="" className="UserLink-link">
-                                  小黑
+                                  {reply.from_uid.username}
                                 </a>
                           </span>
                           <span className="CommentItemV2-reply">回复</span>
                           <span className="UserLink">
                               <a href="" className="UserLink-link">
-                                小白
+                                {reply.to_uid.username}
                               </a>
                           </span>
                           <span className="CommentItemV2-time">
-                            <Moment date={comment.from_uid.createTime} format="YYYY-MM-DD" />
+                            <Moment date={reply.from_uid.createTime} format="YYYY-MM-DD" />
                           </span>
                         </div>
                         <div className="CommentItemV2-metaSibling">
                             <div className="CommentRichText CommentItemV2-content">
                                 <div className="RichText ztext">
-                                  {comment.content}
+                                  {reply.content}
                                 </div>
                             </div>
-                            <div onMouseEnter={this.onButtonMouseEnter} onMouseLeave={this.onButtonsMouseLeave} className="CommentItemV2-footer">
+                            <div onMouseEnter={e => this.onSubReplyButtonMouseEnter(reply._id)} className="CommentItemV2-footer">
                                 <button className="Button CommentItemV2-likeBtn Button--plain">
                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                     <Icon type="like" />赞
                                     </span>
                                 </button>
                                 {
-                                  showExtraButtons ?
+                                  childrenHover.id === reply._id ?
                                   (
                                     <span>
-                                        <button onClick={this.onClickReply}  className="Button CommentItemV2-likeBtn Button--plain">
+                                        <button onClick={this.onClickSubReply}  className="Button CommentItemV2-likeBtn Button--plain">
                                         <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                           <Icon type="message" />
                                           {
-                                            showReplyInput ? '取消回复': '回复'
+                                            childrenHover.id === reply._id && childrenHover.showInput ? '取消回复': '回复'
                                           }
                                         </span>
                                     </button>
@@ -225,23 +305,25 @@ class Commment extends Component{
                                 }
                             </div>
                             {
-                              showReplyInput ?
+                              childrenHover.id === reply._id && childrenHover.showInput ?
                               <div>
                                 <div className="CommentsV2-footer CommentEditorV2--normal CommentEditorV2--active">
                                   <div className="CommentEditorV2-inputWrap CommentEditorV2-inputWrap--active">
                                     <div className="InputLike CommentEditorV2-input Editable">
-                                      <div onKeyUp={this.onContentChange} contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
+                                      <div onKeyUp={this.onSubContentChange} contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
                                       </div>
                                     </div>
                                   </div>
-                                  <button onClick={this.onSubmit} disabled={!content} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
+                                  <button onClick={e => this.onSubReplySubmit(reply)} disabled={!subContent} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
                                 </div>
                               </div>: null
                             }
                         </div>
                     </div>
                   </div>
-                </li>: null
+                </li>
+              })
+                : null
             }
         </ul>
     )
