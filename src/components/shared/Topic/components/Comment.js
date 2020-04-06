@@ -4,6 +4,7 @@ import Moment from 'react-moment';
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row, message } from 'antd';
 import {getAvatar} from '@/utils/common.utils';
 import * as _ from 'lodash';
+import { getLoginUserInfo } from '@/utils/authority';
 class Commment extends Component{
 
   state={
@@ -118,7 +119,7 @@ class Commment extends Component{
   }
 
   onSubReplySubmit = (reply) => {
-    const { topic, dispatch, comment } = this.props;
+    const { topic, dispatch, comment, onReplyOneComment } = this.props;
     const { subContent } = this.state;
     const self = this;
     dispatch({
@@ -139,12 +140,27 @@ class Commment extends Component{
               showInput: false
             }
           })
+          const userInfo = getLoginUserInfo();
+          const newComment = res.datas;
+          newComment.from_uid  = {
+            useDefaultAvatarUrl: userInfo.useDefaultAvatarUrl,
+            _id: userInfo.id,
+            avatarUrl: userInfo.avatarUrl,
+            username: userInfo.username,
+          }
+          newComment.to_uid = comment.from_uid;
+          onReplyOneComment(comment._id, newComment);
           message.success('回复成功');
         } else {
           message.error(res.msg);
         }
       }
     })
+  }
+
+  onFetchMoreSubComment = (reply) => {
+    const { onFetchMoreSubComment } = this.props;
+    onFetchMoreSubComment(reply);
   }
 
   render() {
@@ -237,7 +253,7 @@ class Commment extends Component{
             </li>
             {
               comment.children && comment.children.length ?
-              comment.children.map(reply => {
+              comment.children.map((reply, index) => {
                 return  <li key={reply._id}  onMouseLeave={this.onSubReplyButtonsMouseLeave} className="NestComment--child">
                   <div className="CommentItemV2">
                     <div>
@@ -320,6 +336,10 @@ class Commment extends Component{
                             }
                         </div>
                     </div>
+                    {
+                    comment.children.length >= 10 && index === comment.children.length -1 ?
+                      <div onClick={e => this.onFetchMoreSubComment(comment)} className="more-sub-comment">更多回复</div>: null
+                    }
                   </div>
                 </li>
               })

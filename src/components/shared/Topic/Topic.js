@@ -5,7 +5,7 @@ import TopicBottomActions from './components/TopicBottomActions';
 import Comment from './components/Comment';
 import {getAvatar} from '@/utils/common.utils';
 import { connect } from 'dva';
-import { fetchTopicReply } from '@/services/topic'
+import { fetchTopicReply, fetchSubReply } from '@/services/topic'
 
 class Topic extends Component{
 
@@ -130,6 +130,61 @@ class Topic extends Component{
     })
   }
 
+  onReplyOneComment = (comment_id, newSubComment) => {
+    let { commentDatas } = this.state;
+    const index = _.findIndex(commentDatas.items, item => {
+      return item._id === comment_id;
+    });
+    const indexItem = _.find(commentDatas.items, item => {
+      return item._id === comment_id;
+    });
+    if(indexItem.children && indexItem.children.length >= 10) {
+      this.findMoreReplyComments(indexItem, index, indexItem.children[0]._id, indexItem.topic_id,  indexItem._id, -1);
+    } else {
+      if(! indexItem.children) indexItem.children =[];
+      indexItem.children.unshift(newSubComment);
+      commentDatas.items[index] = indexItem;
+      this.setState({
+        commentDatas
+      })
+    }
+
+  }
+
+  findMoreReplyComments = (comment, commentIndex, current_id, topic_id, parent_reply_id, next_page) => {
+    const self = this;
+    const { commentDatas } = this.state;
+    fetchSubReply({
+      current_id,
+      topic_id,
+      parent_reply_id,
+      next_page
+    }).then(res => {
+      if(res.code === 0) {
+        if(next_page) {
+          comment.children = comment.children.concat(res.datas);
+        } else {
+          comment.children = res.datas.concat(comment.children);
+        }
+        commentDatas.items[commentIndex] = comment;
+        self.setState({
+          commentDatas
+        })
+      }
+    }).catch(rr => {
+      console.error(rr);
+    })
+  }
+
+  onFetchMoreSubComment = (comment ) => {
+    let { commentDatas } = this.state;
+    const index = _.findIndex(commentDatas.items, item => {
+      return item._id === comment._id;
+    });
+    this.findMoreReplyComments(comment, index, comment.children[comment.children.length-1]._id, comment.topic_id,  comment._id, 1);
+  }
+
+
   render() {
     const { topic = {}, expanded, noCollapseAction } = this.props;
     const { showComment, sort_time, commentDatas, tempCommentContent } = this.state;
@@ -253,7 +308,13 @@ class Topic extends Component{
                             {
                                 commentDatas.items.map(item => {
                                     return(
-                                        <Comment topic={topic} comment={item} key={item._id} />
+                                        <Comment
+                                          topic={topic}
+                                          comment={item}
+                                          onReplyOneComment={this.onReplyOneComment}
+                                          onFetchMoreSubComment = {this.onFetchMoreSubComment}
+                                          key={item._id}
+                                        />
                                     )
                                 })
                             }

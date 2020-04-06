@@ -21,6 +21,13 @@ export async function fetchTopicReply(payload) {
   });
 }
 
+export async function fetchSubReply(payload) {
+  return request(`${apiPrefix}/comments/more-sub-comments`, {
+    method: 'POST',
+    data: payload,
+  });
+}
+
 export async function createReply(payload) {
   return request(`${apiPrefix}/comments`, {
     method: 'POST',

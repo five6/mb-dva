@@ -108,7 +108,7 @@ class UserRegister extends Component {
                 confirmLoading: false
               })
               if(res && res.code === 0) {
-                message.success(formatMessage({id: 'userregister.register-result.msg'}).replace("{email}", res.datas.email));
+                message.success(formatMessage({id: 'userregister.register-result.activation-email'}));
                 router.push('/login');
               } else {
                 message.error(res.msg);
@@ -325,7 +325,7 @@ class UserRegister extends Component {
               />,
             )}
           </FormItem>
-          <FormItem>
+          {/* <FormItem>
             <InputGroup compact>
               <Select
                 size="large"
@@ -365,7 +365,7 @@ class UserRegister extends Component {
                 />,
               )}
             </InputGroup>
-          </FormItem>
+          </FormItem> */}
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
