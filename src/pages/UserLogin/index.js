@@ -102,7 +102,7 @@ class MyForm extends Component {
           }}
         >
           <UserName
-            name="name"
+            name="username"
             placeholder={formatMessage({ id: 'app.login.userName_email' })}
             rules={[
               {

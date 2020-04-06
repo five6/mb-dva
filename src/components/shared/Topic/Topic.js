@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
-
+import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row, message } from 'antd';
+import * as _ from 'lodash';
 import TopicBottomActions from './components/TopicBottomActions';
 import Comment from './components/Comment';
 import {getAvatar} from '@/utils/common.utils';
@@ -17,7 +17,8 @@ class Topic extends Component{
       currentPage: 1,
       pageSize: 10,
       totalCount: 0
-    }
+    },
+    tempCommentContent: ''
   }
 
   expandTopic = (id) => {
@@ -69,13 +70,46 @@ class Topic extends Component{
       this.onClickTopicAction('showComment', true, !sort_time);
   }
 
-  submitReply = () => {
+  onSubContentChange = (e) => {
+    this.setState({
+      tempCommentContent: _.trim(e.target.innerText)
+    })
+  }
 
+
+  submitReply = () => {
+    const { topic, dispatch } = this.props;
+    const { tempCommentContent } = this.state;
+    if(! tempCommentContent) {
+      message.info('请输入内容！');
+      return;
+    }
+    const self = this;
+    dispatch({
+      type: 'topic/createReply',
+      payload: {
+        topic_id:topic._id,
+        to_uid: topic.from_uid._id,
+        reply_level: 1,
+        content: tempCommentContent
+      },
+      callback(res) {
+        if(res.code === 0) {
+          self.setState({
+            tempCommentContent: '',
+          })
+          self.inputCommentDiv.innerText = '';
+          message.success('回复成功');
+        } else {
+          message.error(res.msg);
+        }
+      }
+    })
   }
 
   render() {
     const { topic = {}, expanded, noCollapseAction } = this.props;
-    const { showComment, sort_time, commentDatas } = this.state;
+    const { showComment, sort_time, commentDatas, tempCommentContent } = this.state;
     return(
         <div className="Card TopstoryItem TopstoryItem-isRecommend">
             <h2 className="ContentItem-title">
@@ -206,12 +240,11 @@ class Topic extends Component{
                       <div className="CommentsV2-footer CommentEditorV2--normal CommentEditorV2--active">
                         <div className="CommentEditorV2-inputWrap CommentEditorV2-inputWrap--active">
                           <div className="InputLike CommentEditorV2-input Editable">
-                            <div contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
-
+                            <div ref={(inputCommentDiv) => { this.inputCommentDiv = inputCommentDiv }} onKeyUp={this.onSubContentChange} contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
                             </div>
                           </div>
                         </div>
-                        <button onClick={this.submitReply} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
+                        <button onClick={this.submitReply} disabled={!tempCommentContent} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
                       </div>
                     </div>
                 </div>
