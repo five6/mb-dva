@@ -34,6 +34,7 @@ class Topic extends Component{
   onClickTopicAction = (type, onlySort, sort_time) => {
     const self = this;
     const { showComment } = this.state;
+    const {currentPage, pageSize} = self.state.commentDatas;
     const { topic } = this.props;
     if('showComment' === type) {
       if(!onlySort)
@@ -45,9 +46,8 @@ class Topic extends Component{
         sort_time = this.state.sort_time;
         fetchTopicReply({
           topic_id: topic._id,
-          sort_time
+          sort_time,
         }).then(res => {
-          const {currentPage, pageSize} = self.state.commentDatas;
           const {items, totalCount} = res;
           self.setState({
             commentDatas: {
@@ -60,6 +60,28 @@ class Topic extends Component{
         })
       }
     }
+  }
+
+  fetchComment = (currentPage) => {
+    const { sort_time , commentDatas: { pageSize }} = this.state;
+    const { topic } = this.props;
+    const self = this;
+    fetchTopicReply({
+      topic_id: topic._id,
+      sort_time,
+      currentPage,
+      pageSize
+    }).then(res => {
+      const {items, totalCount} = res;
+      self.setState({
+        commentDatas: {
+          items,
+          currentPage,
+          totalCount,
+          pageSize
+        }
+      })
+    })
   }
 
   onClickChangeOrderType = () => {
@@ -99,6 +121,7 @@ class Topic extends Component{
             tempCommentContent: '',
           })
           self.inputCommentDiv.innerText = '';
+          self.fetchComment(1);
           message.success('回复成功');
         } else {
           message.error(res.msg);
@@ -234,6 +257,14 @@ class Topic extends Component{
                                     )
                                 })
                             }
+                              <Pagination
+                                size="small"
+                                className="ant-table-pagination"
+                                total={commentDatas.totalCount}
+                                current={commentDatas.currentPage}
+                                pageSize={commentDatas.pageSize}
+                                onChange={this.fetchComment}
+                              />
                         </div>
                     </div>
                     <div>

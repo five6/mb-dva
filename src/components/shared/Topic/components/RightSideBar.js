@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row } from 'antd';
+import { PageHeader, Menu, Dropdown, Icon, Button, Tabs, Typography, Row, message } from 'antd';
 
 
 class RightSideBar extends Component{
 
   state={
-   
+
   }
 
   render() {
@@ -17,15 +17,15 @@ class RightSideBar extends Component{
                 <Icon className="Zi Zi--Paper GlobalWrite-navIcon" type="file-text" theme="filled" />
                 <div className="GlobalWrite-navTitle">发布话题</div>
               </a>
-              <a className="GlobalWrite-navItem">
+              <a onClick={e => message.info('功能暂未实现')} className="GlobalWrite-navItem">
                 <Icon className="Zi Zi--Paper GlobalWrite-navIcon" type="edit" theme="filled" />
                 <div className="GlobalWrite-navTitle">写想法</div>
               </a>
-              <a className="GlobalWrite-navItem">
+              <a onClick={e => message.info('功能暂未实现')}  className="GlobalWrite-navItem">
                 <Icon className="Zi Zi--Paper GlobalWrite-navIcon" type="edit" theme="filled" />
                 <div className="GlobalWrite-navTitle">发图片</div>
               </a>
-              <a className="GlobalWrite-navItem">
+              <a onClick={e => message.info('功能暂未实现')} className="GlobalWrite-navItem">
                 <Icon className="Zi Zi--Paper GlobalWrite-navIcon" type="edit" theme="filled" />
                 <div className="GlobalWrite-navTitle">草稿箱</div>
               </a>
