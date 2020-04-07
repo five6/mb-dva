@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
-import { Checkbox, Alert, message, Icon, Input, Form, Row, Col, Button } from 'antd';
+import { Checkbox, Alert, message, Icon, Input, Form, Layout, Col, Button } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
 import { getFakeCaptcha } from '@/services/users';
@@ -15,6 +15,7 @@ import router from 'umi/router';
 
 
 const { Tab, UserName, Password, Mobile, ImgCaptcha, Submit } = Login;
+const { Header, Footer, Content } = Layout;
 
 @connect(({ login, loading, global }) => ({
   login,
@@ -140,6 +141,7 @@ class MyForm extends Component {
               <FormattedMessage id="app.login.to.sign-up" />
             </Link>
         </Login>
+        {/* <Footer style={{ textAlign: 'center' }}> Copyright © 2018-2020 56网站. 沪ICP备15039329号-2	</Footer> */}
       </div>
     );
   }

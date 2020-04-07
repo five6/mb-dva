@@ -4,12 +4,15 @@ import RightContent from './RightContent';
 import {
   Layout,
   Menu,
+  Input,
+  message
 } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { getLoginUserInfo } from '@/utils/authority';
 
 const { Header, Footer, Content } = Layout;
+const { Search } = Input;
 
 
 class BasicLayout extends Component {
@@ -84,10 +87,14 @@ class BasicLayout extends Component {
             <Menu.Item key="/good">精华</Menu.Item>
             <Menu.Item key="/share">分享</Menu.Item>
             <Menu.Item key="/ask">问答</Menu.Item>
-            <Menu.Item key="/job">招聘</Menu.Item>
-            <Menu.Item key="/explore">发现</Menu.Item>
-
+            {/* <Menu.Item key="/job">招聘</Menu.Item> */}
           </Menu>
+          <Search
+            size="large"
+            className="top-search"
+            placeholder="输入感兴趣的话题试试"
+            onSearch={value => message.info('服务开发中。。。')}
+          />
           <RightContent {...props} {...this.props} />
         </Header>
         <Content className={styles.ant_layout_content}>

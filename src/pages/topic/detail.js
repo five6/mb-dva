@@ -13,8 +13,14 @@ import {getAvatar} from '@/utils/common.utils';
 
 class OneTopic extends Component{
 
-  state={
+  constructor(props) {
+    super(props);
+    moment.locale('zh-cn');
+    this.state={
+    }
   }
+
+
 
   componentDidMount() {
     const userInfo = getLoginUserInfo();
@@ -126,7 +132,12 @@ class OneTopic extends Component{
                 {
                   topicDetail.lastUpdateTime ?
                     <div>
-                      编辑于<Moment local="zh-CN" date={topicDetail.lastUpdateTime} format="llll" />
+                      编辑于
+                      <Moment
+                        local
+                        date={topicDetail.lastUpdateTime}
+                        fromNow
+                      />
                       </div>
                   : ''
                 }

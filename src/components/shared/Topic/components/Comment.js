@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Moment from 'react-moment';
+import moment from 'moment';
+
 import { PageHeader, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row, message } from 'antd';
 import {getAvatar} from '@/utils/common.utils';
 import * as _ from 'lodash';
 import { getLoginUserInfo } from '@/utils/authority';
 class Commment extends Component{
-
   state={
     showExtraButtons: false,
     showReplyInput: false,
@@ -18,7 +19,8 @@ class Commment extends Component{
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    moment.locale('zh-cn');
   }
 
   onButtonMouseEnter = () => {
@@ -191,7 +193,7 @@ class Commment extends Component{
                               }
                             </span>
                             <span className="CommentItemV2-time">
-                              <Moment date={comment.from_uid.createTime} format="YYYY-MM-DD" />
+                              <Moment date={comment.createTime} fromNow/>
                             </span>
                         </div>
                         <div className="CommentItemV2-metaSibling">
@@ -200,7 +202,7 @@ class Commment extends Component{
                                   {comment.content}
                                 </div>
                             </div>
-                            <div onMouseEnter={this.onButtonMouseEnter} onMouseLeave={this.onButtonsMouseLeave} className="CommentItemV2-footer">
+                            <div style={{ display: comment.from_uid._id === getLoginUserInfo().id ? 'none': 'block' }} onMouseEnter={this.onButtonMouseEnter} onMouseLeave={this.onButtonsMouseLeave} className="CommentItemV2-footer">
                                 <button className="Button CommentItemV2-likeBtn Button--plain">
                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                     <Icon type="like" />赞
@@ -279,7 +281,7 @@ class Commment extends Component{
                               </a>
                           </span>
                           <span className="CommentItemV2-time">
-                            <Moment date={reply.from_uid.createTime} format="YYYY-MM-DD" />
+                            <Moment fromNow date={reply.createTime} />
                           </span>
                         </div>
                         <div className="CommentItemV2-metaSibling">
@@ -288,7 +290,7 @@ class Commment extends Component{
                                   {reply.content}
                                 </div>
                             </div>
-                            <div onMouseEnter={e => this.onSubReplyButtonMouseEnter(reply._id)} className="CommentItemV2-footer">
+                            <div style={{ display: reply.from_uid._id === getLoginUserInfo().id ? 'none': 'block' }} onMouseEnter={e => this.onSubReplyButtonMouseEnter(reply._id)} className="CommentItemV2-footer">
                                 <button className="Button CommentItemV2-likeBtn Button--plain">
                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                     <Icon type="like" />赞
@@ -337,6 +339,7 @@ class Commment extends Component{
                         </div>
                     </div>
                     {
+                      // TODO: 正式修改为50条才继续翻页查询， 当数据大于XXX，使用分页保证浏览器稳定
                     comment.children.length >= 10 && index === comment.children.length -1 ?
                       <div onClick={e => this.onFetchMoreSubComment(comment)} className="more-sub-comment">更多回复</div>: null
                     }

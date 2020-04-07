@@ -6,8 +6,9 @@ module.exports = {
   getAvatar(author) {
     if(author.useDefaultAvatarUrl) {
       return common_avatar_url + author.avatarUrl;
-    } else {
+    } else if(author.avatarUrl){
       return common_file_url + '/' + author.avatarUrl;
     }
+    return '';
   }
 }

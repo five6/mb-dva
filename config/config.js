@@ -26,7 +26,7 @@ export default {
           // default false
           default: 'zh-CN',
           // en-US default zh-CN
-          baseNavigator: false, // default true, when it is true, will use `navigator.language` overwrite default
+          baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
         },
         dynamicImport: {
           loadingComponent: './components/PageLoading/index',
