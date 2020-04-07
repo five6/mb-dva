@@ -1,5 +1,6 @@
-import { fetchTopics, fetchTopicReply, createTopic, fetchTopicDetail, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
+import { upvoteCount, fetchTopics, fetchTopicReply, createTopic, fetchTopicDetail, deleteReply, fetchTopicType, createReply, deleteTopic } from '@/services/topic';
 import { setAuthority, clearAuthority } from '@/utils/authority';
+import * as _ from 'lodash';
 
 export default {
   namespace: 'topic',
@@ -44,6 +45,14 @@ export default {
   },
 
   effects: {
+    *upvoteCount({payload, callback}, { call, put }) {
+      const result = yield call(upvoteCount, payload);
+      yield put({
+        type: 'saveAfterUpvoteCount',
+        payload: { queryCond: payload, result }
+      });
+      callback(result);
+    },
     *fetchTopicTypes(_, {call, put}) {
       const result = yield call(fetchTopicType);
       const typeObj = result.datas;
@@ -99,6 +108,24 @@ export default {
   },
 
   reducers: {
+    saveAfterUpvoteCount(state, { payload: { queryCond, result } }) {
+      const tab = queryCond.topicType || 'all';
+      const data = { ...state.topicDatas[tab] };
+      const index = _.findIndex(data.items, item => {
+        return item._id === queryCond.id;
+      })
+      if(queryCond.type === 'down') {
+        data.items[index].upvoteCount = data.items[index].upvoteCount - 1;
+      } else {
+        data.items[index].upvoteCount = data.items[index].upvoteCount + 1;
+      }
+      const topicDatas = state.topicDatas;
+      topicDatas[tab] = data;
+      return {
+        ...state,
+        topicDatas
+      };
+    },
     saveTopicDetail(state, { payload }) {
       return {
         ...state,

@@ -81,3 +81,15 @@ export async function fetchTopicDetail(id) {
   })
 }
 
+
+export async function upvoteCount(payload) {
+  return request(`${apiPrefix}/topics/upvoteCount`, {
+    method: 'PUT',
+    params: payload,
+    headers: {
+      Accept: "application/json"
+    },
+  })
+}
+
+

@@ -18,7 +18,8 @@ class Topic extends Component{
       pageSize: 10,
       totalCount: 0
     },
-    tempCommentContent: ''
+    tempCommentContent: '',
+    hasUpvotedCount: false // 是否已经推荐
   }
 
   expandTopic = (id) => {
@@ -33,9 +34,9 @@ class Topic extends Component{
 
   onClickTopicAction = (type, onlySort, sort_time) => {
     const self = this;
-    const { showComment } = this.state;
+    const { showComment, hasUpvotedCount } = this.state;
     const {currentPage, pageSize} = self.state.commentDatas;
-    const { topic } = this.props;
+    const { topic, dispatch } = this.props;
     if('showComment' === type) {
       if(!onlySort)
         this.setState({
@@ -59,6 +60,24 @@ class Topic extends Component{
           })
         })
       }
+    } else if(type === 'upvoteCount') {
+      if(onlySort === 'down' && !hasUpvotedCount || onlySort === 'up' && hasUpvotedCount) return;
+      dispatch({
+        type: 'topic/upvoteCount',
+        payload: {
+          id:topic._id,
+          type: hasUpvotedCount ? 'down': 'up'
+        },
+        callback(res) {
+          if(res.code === 0) {
+            self.setState({
+              hasUpvotedCount: !hasUpvotedCount,
+            });
+          } else {
+            message.error(res.msg);
+          }
+        }
+      })
     }
   }
 
@@ -187,7 +206,7 @@ class Topic extends Component{
 
   render() {
     const { topic = {}, expanded, noCollapseAction } = this.props;
-    const { showComment, sort_time, commentDatas, tempCommentContent } = this.state;
+    const { showComment, sort_time, commentDatas, tempCommentContent, hasUpvotedCount } = this.state;
     return(
         <div className="Card TopstoryItem TopstoryItem-isRecommend">
             <h2 className="ContentItem-title">
@@ -278,6 +297,8 @@ class Topic extends Component{
             </div>
             }
             <TopicBottomActions
+              hasUpvotedCount={hasUpvotedCount}
+              showComment={showComment}
               noCollapseAction={noCollapseAction}
               isCollapsed={expanded}
               collapseTopic={this.collapseTopic}

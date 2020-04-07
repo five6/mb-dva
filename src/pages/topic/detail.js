@@ -132,7 +132,7 @@ class OneTopic extends Component{
                 {
                   topicDetail.lastUpdateTime ?
                     <div>
-                      编辑于
+                      最后编辑于
                       <Moment
                         local
                         date={topicDetail.lastUpdateTime}
@@ -163,23 +163,12 @@ class OneTopic extends Component{
                 </div>
               </div>
               <div>
-                <StickyContainer>
-                    <Sticky bottomOffset={0}>
-                    {({style}) => {
-                        return(
-                          <div style={style}>
-                            sfsfsf
-                            sdfsdfsdf
-                            sfsdfsfsdfsd
-
-                            十分舒服
-                            <button>sdfsdfsf</button>
-                          </div>
-                        )
-
-                    }}
-                  </Sticky>
-                </StickyContainer>
+                <div>
+                  sfsfsf
+                  sdfsdfsdf
+                  sfsdfsfsdfsd
+                  <button className="button">sdfsdfsf</button>
+                </div>
               </div>
             </article>
             <div className="Post-Sub Post-NormalSub">

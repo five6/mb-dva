@@ -15,33 +15,46 @@ class BottomActions extends Component{
       collapseTopic(topic._id);
   }
 
-  onClickTopicAction = (type) => {
+  onClickTopicAction = (type, updown) => {
     const { onClickTopicAction } = this.props;
-    onClickTopicAction(type);
+    onClickTopicAction(type, updown);
   }
 
   render() {
-    const { isCollapsed, noCollapseAction, topic } = this.props;
-    const { topicExtra = {}  } = topic;
+    const { isCollapsed, noCollapseAction, showComment, topic: { commentCount, upvoteCount}, hasUpvotedCount  } = this.props;
     return(
         <div className="ContentItem-actions">
             <div className="ContentItem-actions ZVideoToolbar ContentItem-action ZVideoItem-toolbar">
                 <span >
-                    <button className="Button VoteButton VoteButton--up" type="button">
-                        <Icon type="caret-up" />
-                        赞同 {topic.upvoteCount}
+
+                    {
+                      hasUpvotedCount ?
+                      <button onClick={e => this.onClickTopicAction('upvoteCount', 'up')} className="Button VoteButton VoteButton--up is-active" type="button">
+                      <Icon type="caret-up" />
+                      已赞同 {upvoteCount}
+                    </button> :
+                      <button onClick={e => this.onClickTopicAction('upvoteCount', 'up')} className="Button VoteButton VoteButton--up" type="button">
+                      <Icon type="caret-up" />
+                      赞同 {upvoteCount}
                     </button>
-                    {/* <button className="Button VoteButton VoteButton--up is-active" type="button">
-                        <Icon type="caret-up" />
-                        已赞同 3962
-                    </button> */}
-                    <button className="Button VoteButton VoteButton--down" type="button">
+                    }
+                    <button onClick={e => this.onClickTopicAction('upvoteCount', 'down')}  className="Button VoteButton VoteButton--down" type="button">
                         <Icon type="caret-down" />
                     </button>
                 </span>
                 <button onClick={() => this.onClickTopicAction('showComment')} className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
-                    <Icon type="message" theme="filled"/>
-                    {topicExtra.commentCount}条评论
+                   {
+                     showComment  ?
+                     <span>
+                     <Icon type="up" theme="filled"/>
+                      收起评论
+                    </span>
+                    :
+                    <span>
+                      <Icon type="message" theme="filled"/>
+                      {` ${commentCount} 条评论 `}
+                    </span>
+                   }
                 </button>
                 <button onClick={() => this.onClickTopicAction('followingTopic')} className="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
                     <Icon type="star"  theme="filled"/>
