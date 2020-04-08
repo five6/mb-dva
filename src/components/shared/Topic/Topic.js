@@ -5,7 +5,7 @@ import TopicBottomActions from './components/TopicBottomActions';
 import Comment from './components/Comment';
 import {getAvatar} from '@/utils/common.utils';
 import { connect } from 'dva';
-import { fetchTopicReply, fetchSubReply } from '@/services/topic'
+import { fetchTopicReply, fetchSubReply } from '@/services/topic';
 
 class Topic extends Component{
 
@@ -19,7 +19,6 @@ class Topic extends Component{
       totalCount: 0
     },
     tempCommentContent: '',
-    hasUpvotedCount: false // 是否已经推荐
   }
 
   expandTopic = (id) => {
@@ -34,7 +33,7 @@ class Topic extends Component{
 
   onClickTopicAction = (type, onlySort, sort_time) => {
     const self = this;
-    const { showComment, hasUpvotedCount } = this.state;
+    const { showComment } = this.state;
     const {currentPage, pageSize} = self.state.commentDatas;
     const { topic, dispatch } = this.props;
     if('showComment' === type) {
@@ -49,6 +48,7 @@ class Topic extends Component{
           topic_id: topic._id,
           sort_time,
         }).then(res => {
+          if(!res || res.code !== 0) return;
           const {items, totalCount} = res;
           self.setState({
             commentDatas: {
@@ -61,22 +61,13 @@ class Topic extends Component{
         })
       }
     } else if(type === 'upvoteCount') {
-      if(onlySort === 'down' && !hasUpvotedCount || onlySort === 'up' && hasUpvotedCount) return;
+      if((onlySort === 'up' && topic.hasUpvotedCount) || (onlySort === 'down' && ! topic.hasUpvotedCount ) ) return;
       dispatch({
         type: 'topic/upvoteCount',
         payload: {
           id:topic._id,
-          type: hasUpvotedCount ? 'down': 'up'
+          type: onlySort
         },
-        callback(res) {
-          if(res.code === 0) {
-            self.setState({
-              hasUpvotedCount: !hasUpvotedCount,
-            });
-          } else {
-            message.error(res.msg);
-          }
-        }
       })
     }
   }
@@ -205,8 +196,8 @@ class Topic extends Component{
 
 
   render() {
-    const { topic = {}, expanded, noCollapseAction } = this.props;
-    const { showComment, sort_time, commentDatas, tempCommentContent, hasUpvotedCount } = this.state;
+    const {topic, expanded, noCollapseAction } = this.props;
+    const { showComment, sort_time, commentDatas, tempCommentContent } = this.state;
     return(
         <div className="Card TopstoryItem TopstoryItem-isRecommend">
             <h2 className="ContentItem-title">
@@ -297,7 +288,7 @@ class Topic extends Component{
             </div>
             }
             <TopicBottomActions
-              hasUpvotedCount={hasUpvotedCount}
+              hasUpvotedCount={topic.hasUpvotedCount}
               showComment={showComment}
               noCollapseAction={noCollapseAction}
               isCollapsed={expanded}
@@ -370,4 +361,4 @@ class Topic extends Component{
 
 }
 
-export default connect()(Topic);;
+export default Topic;

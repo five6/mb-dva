@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Popover, Button, Icon, Tag, Tabs, Typography, Row, message } from 'antd';
-import { StickyContainer, Sticky } from 'react-sticky';
+import { PageHeader, Form, Pagination, Menu, Dropdown, Icon, Button, Tabs, Typography, Row, message } from 'antd';
 
+import { StickyContainer, Sticky } from 'react-sticky';
+import * as _ from 'lodash';
 import router from 'umi/router';
 import Moment from 'react-moment';
 import moment from 'moment';
 import { getLoginUserInfo } from '@/utils/authority';
 import Comment from '@/components/shared/Topic/components/Comment';
 import {getAvatar} from '@/utils/common.utils';
+import { fetchTopicReply, fetchSubReply, fetchTopicDetail } from '@/services/topic';
 
 
 class OneTopic extends Component{
@@ -17,6 +19,17 @@ class OneTopic extends Component{
     super(props);
     moment.locale('zh-cn');
     this.state={
+      topicDetail: {
+        from_uid: {},
+      },
+      sort_time: false, // 排序方式
+      commentDatas: {
+        items: [],
+        currentPage: 1,
+        pageSize: 10,
+        totalCount: 0
+      },
+      tempCommentContent: '',
     }
   }
 
@@ -28,23 +41,164 @@ class OneTopic extends Component{
       router.push('/login');
       return;
     }
-    const { dispatch, location } = this.props;
-    dispatch({
-      type: 'topic/fetchTopicDetail',
-      payload: location.pathname.split('/topics/')[1]
+    const { location } = this.props;
+    const self = this;
+    fetchTopicDetail(location.pathname.split('/topics/')[1]).then(res => {
+      if(res && res.code === 0) {
+        self.setState({
+          topicDetail: res.datas
+        })
+        self.fetchComment(1);
+      }
     })
+  }
+
+  onClickTopicAction = (type, onlySort, sort_time) => {
+    const self = this;
+    const { showComment, topicDetail } = this.state;
+    const {currentPage, pageSize} = self.state.commentDatas;
+    const { dispatch } = this.props;
+    if('showComment' === type) {
+      if(!onlySort)
+        this.setState({
+          showComment: !showComment
+        })
+      if(!showComment || onlySort) {
+        if(sort_time === undefined)
+        sort_time = this.state.sort_time;
+        fetchTopicReply({
+          topic_id: topicDetail._id,
+          sort_time,
+        }).then(res => {
+          if(!res || res.code !== 0) return;
+          const {items, totalCount} = res;
+          self.setState({
+            commentDatas: {
+              items,
+              currentPage,
+              totalCount,
+              pageSize
+            }
+          })
+        })
+      }
+    } else if(type === 'upvoteCount') {
+      if((onlySort === 'up' && topicDetail.hasUpvotedCount) || (onlySort === 'down' && ! topicDetail.hasUpvotedCount ) ) return;
+      dispatch({
+        type: 'topic/upvoteCount',
+        payload: {
+          id:topicDetail._id,
+          type: onlySort
+        },
+      })
+    }
+  }
+
+  onClickChangeOrderType = () => {
+    const {sort_time} = this.state;
+      this.setState({
+        sort_time:  ! sort_time
+      });
+      this.onClickTopicAction('showComment', true, !sort_time);
+  }
+
+  onSubContentChange = (e) => {
+    this.setState({
+      tempCommentContent: _.trim(e.target.innerText)
+    })
+  }
+
+  fetchComment = (currentPage) => {
+    const { topicDetail, sort_time , commentDatas: { pageSize }} = this.state;
+    const self = this;
+    fetchTopicReply({
+      topic_id: topicDetail._id,
+      sort_time,
+      currentPage,
+      pageSize
+    }).then(res => {
+      if(! res || res.code !== 0) return;
+      const {items, totalCount} = res;
+      self.setState({
+        commentDatas: {
+          items,
+          currentPage,
+          totalCount,
+          pageSize
+        }
+      })
+    })
+  }
 
 
+  findMoreReplyComments = (comment, commentIndex, current_id, topic_id, parent_reply_id, next_page) => {
+    const self = this;
+    const { commentDatas } = this.state;
+    fetchSubReply({
+      current_id,
+      topic_id,
+      parent_reply_id,
+      next_page
+    }).then(res => {
+      if(res.code === 0) {
+        if(next_page) {
+          comment.children = comment.children.concat(res.datas);
+        } else {
+          comment.children = res.datas.concat(comment.children);
+        }
+        commentDatas.items[commentIndex] = comment;
+        self.setState({
+          commentDatas
+        })
+      }
+    }).catch(rr => {
+      console.error(rr);
+    })
+  }
+
+  onFetchMoreSubComment = (comment ) => {
+    let { commentDatas } = this.state;
+    const index = _.findIndex(commentDatas.items, item => {
+      return item._id === comment._id;
+    });
+    this.findMoreReplyComments(comment, index, comment.children[comment.children.length-1]._id, comment.topic_id,  comment._id, 1);
+  }
+
+  submitReply = () => {
+    const { dispatch } = this.props;
+    const { tempCommentContent, topicDetail } = this.state;
+    if(! tempCommentContent) {
+      message.info('请输入内容！');
+      return;
+    }
+    const self = this;
+    dispatch({
+      type: 'topic/createReply',
+      payload: {
+        topic_id:topicDetail._id,
+        to_uid: topicDetail.from_uid._id,
+        reply_level: 1,
+        content: tempCommentContent
+      },
+      callback(res) {
+        if(res.code === 0) {
+          self.setState({
+            tempCommentContent: '',
+          })
+          self.inputCommentDiv.innerText = '';
+          self.fetchComment(1);
+          message.success('回复成功');
+        } else {
+          message.error(res.msg);
+        }
+      }
+    })
   }
 
 
 
-
   render() {
-
-    let { topicDetail } = this.props;
-    topicDetail = topicDetail && topicDetail.from_uid ? topicDetail:  {from_uid: {}, comments: []};
-
+    const {topicDetail,  sort_time, commentDatas, tempCommentContent } = this.state;
     const content = (
       <div>
         <p>内容</p>
@@ -162,57 +316,63 @@ class OneTopic extends Component{
                   }
                 </div>
               </div>
-              <div>
-                <div>
-                  sfsfsf
-                  sdfsdfsdf
-                  sfsdfsfsdfsd
-                  <button className="button">sdfsdfsf</button>
-                </div>
-              </div>
             </article>
             <div className="Post-Sub Post-NormalSub">
               <div className="Comments-container">
                 <div className="CommentsV2 CommentsV2--withEditor CommentsV2-withPagination">
                     <div className="Topbar CommentTopbar">
-                      <div className="Topbar-title">
-                        <h2 className="CommentTopbar-title">2 条评论</h2>
-                      </div>
-                      <div className="Topbar-options">
-                        <button className="Button Button--plain Button--withIcon Button--withLabel">
-                          <span style={{display: 'inline-flex', alignItems: 'center'}}>
-                            <Icon type="swap" />切换为时间排序
-                          </span>
-                        </button>
-                      </div>
+                        <div className="Topbar-title">
+                          <h2 className="CommentTopbar-title">{commentDatas.totalCount}条评论</h2>
+                        </div>
+                        <div className="Topbar-options">
+                            <button onClick={this.onClickChangeOrderType} className="Button Button--plain Button--withIcon Button--withLabel">
+                            <span style={{display: 'inline-flex', alignItems: 'center'}}>
+                                <Icon type="swap" />
+                                {
+                                  sort_time ?  '切换为默认排序': '切换为时间排序'
+                                }
+                            </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="CommentListV2">
+                            {
+                                commentDatas.items.map(item => {
+                                    return(
+                                        <Comment
+                                          topic={topicDetail}
+                                          comment={item}
+                                          onReplyOneComment={this.onReplyOneComment}
+                                          onFetchMoreSubComment = {this.onFetchMoreSubComment}
+                                          key={item._id}
+                                        />
+                                    )
+                                })
+                            }
+                              <Pagination
+                                size="small"
+                                className="ant-table-pagination"
+                                total={commentDatas.totalCount}
+                                current={commentDatas.currentPage}
+                                pageSize={commentDatas.pageSize}
+                                onChange={this.fetchComment}
+                              />
+                        </div>
                     </div>
                     <div>
                       <div className="CommentsV2-footer CommentEditorV2--normal CommentEditorV2--active">
                         <div className="CommentEditorV2-inputWrap CommentEditorV2-inputWrap--active">
                           <div className="InputLike CommentEditorV2-input Editable">
-                            <div contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
-
+                            <div ref={(inputCommentDiv) => { this.inputCommentDiv = inputCommentDiv }} onKeyUp={this.onSubContentChange} contentEditable="plaintext-only" className="Dropzone Editable-content RichText RichText--editable RichText--clearBoth ztext">
                             </div>
                           </div>
                         </div>
-                        <button className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="CommentListV2">
-                          {
-                            (topicDetail.comments || []).map(item => {
-                              return(
-                                <Comment coment={item} key={item} />
-                              )
-                            })
-                          }
-
+                        <button onClick={this.submitReply} disabled={!tempCommentContent} className="Button CommentEditorV2-singleButton Button--primary Button--blue">发布</button>
                       </div>
                     </div>
                 </div>
               </div>
-
             </div>
         </div>
     )
@@ -220,10 +380,6 @@ class OneTopic extends Component{
 
 }
 
-export default connect(state => {
-    return {
-      topicDetail: state.topic.topicDetail,
-    }
-  })(Form.create()(OneTopic));
+export default connect()(Form.create()(OneTopic));
 
 

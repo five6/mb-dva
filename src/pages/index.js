@@ -22,7 +22,9 @@ class Index extends Component{
                     <img alt="广告" src="https://pic2.zhimg.com/v2-6e8fccc8a30e8cf15a90e7a894011579_r.jpg" className="css-vnkjjr"></img>
                   </a> */}
                  <div className="Topstory-mainColumnCard">
-                  <Topics typeTopics={typeTopics} />
+                  {
+                    <Topics typeTopics={typeTopics} />
+                  }
                 </div>
               </div>
               <div className="GlobalSideBar">

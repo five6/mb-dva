@@ -87,7 +87,7 @@ class BasicLayout extends Component {
             <Menu.Item key="/good">精华</Menu.Item>
             <Menu.Item key="/share">分享</Menu.Item>
             <Menu.Item key="/ask">问答</Menu.Item>
-            {/* <Menu.Item key="/job">招聘</Menu.Item> */}
+            <Menu.Item key="/job">招聘</Menu.Item>
           </Menu>
           <Search
             size="large"

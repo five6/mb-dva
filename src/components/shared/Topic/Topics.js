@@ -48,7 +48,7 @@ class Topics extends Component{
   }
 
   render() {
-    const { typeTopics: { items =[], totalCount = 0, pageSize = 10, currentPage = 1}} = this.props; 
+    const { typeTopics: { items =[], totalCount = 0, pageSize = 10, currentPage = 1}} = this.props;
     const { expandings } = this.state;
     return(
         <div className="TopstoryContent">
@@ -57,16 +57,19 @@ class Topics extends Component{
                     <div>
                         {
                             items.map((item, index) => {
-                                return <Topic key={item._id} expandTopic={this.expandTopic} collapseTopic={this.collapseTopic} expanded={expandings[item._id]} topic={item} />
+                                return (<Topic dispatch={this.props.dispatch} key={item._id} expandTopic={this.expandTopic} collapseTopic={this.collapseTopic} expanded={expandings[item._id]} topic={item} />)
                             })
                         }
-                        <Pagination
-                        className="ant-table-pagination"
-                        total={totalCount}
-                        current={currentPage}
-                        pageSize={pageSize}
-                        onChange={this.fetchTopicData}
-                        />
+                      {
+                        items.length ?
+                          <Pagination
+                          className="ant-table-pagination"
+                          total={totalCount}
+                          current={currentPage}
+                          pageSize={pageSize}
+                          onChange={this.fetchTopicData}
+                          />: null
+                      }
                     </div>
                 </div>
             </div>

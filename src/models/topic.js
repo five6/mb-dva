@@ -2,48 +2,48 @@ import { upvoteCount, fetchTopics, fetchTopicReply, createTopic, fetchTopicDetai
 import { setAuthority, clearAuthority } from '@/utils/authority';
 import * as _ from 'lodash';
 
+const defaultState = {
+  topicDetail: {},
+  topicTypes: [],
+  topicDatas: {
+      all: {
+        items: [],
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      googd: {
+        items: [],
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      share: {
+        items: [],
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      ask: {
+        items: [],
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1
+      },
+      job: {
+        items: [],
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1
+      }
+  },
+  currentUser: {},
+  status: undefined,
+}
+
 export default {
   namespace: 'topic',
-
-  state: {
-    topicDetail: {},
-    topicTypes: [],
-    topicDatas: {
-        all: {
-          items: [],
-          totalCount: 0,
-          pageSize: 10,
-          currentPage: 1
-        },
-        googd: {
-          items: [],
-          totalCount: 0,
-          pageSize: 10,
-          currentPage: 1
-        },
-        share: {
-          items: [],
-          totalCount: 0,
-          pageSize: 10,
-          currentPage: 1
-        },
-        ask: {
-          items: [],
-          totalCount: 0,
-          pageSize: 10,
-          currentPage: 1
-        },
-        job: {
-          items: [],
-          totalCount: 0,
-          pageSize: 10,
-          currentPage: 1
-        }
-    },
-    currentUser: {},
-    status: undefined,
-  },
-
+  state: defaultState,
   effects: {
     *upvoteCount({payload, callback}, { call, put }) {
       const result = yield call(upvoteCount, payload);
@@ -51,7 +51,6 @@ export default {
         type: 'saveAfterUpvoteCount',
         payload: { queryCond: payload, result }
       });
-      callback(result);
     },
     *fetchTopicTypes(_, {call, put}) {
       const result = yield call(fetchTopicType);
@@ -98,12 +97,14 @@ export default {
         const response = yield call(deleteReply, payload);
         callback(response);
     },
-    *fetchTopicDetail({payload}, {call, put}) {
+    *fetchTopicDetail({payload, callback}, {call, put}) {
       const response = yield call(fetchTopicDetail, payload);
       yield put({
         type: 'saveTopicDetail',
         payload: response.datas,
       });
+      if(callback && typeof callback === 'function')
+        callback(response);
     }
   },
 
@@ -116,8 +117,10 @@ export default {
       })
       if(queryCond.type === 'down') {
         data.items[index].upvoteCount = data.items[index].upvoteCount - 1;
+        data.items[index].hasUpvotedCount = false;
       } else {
         data.items[index].upvoteCount = data.items[index].upvoteCount + 1;
+        data.items[index].hasUpvotedCount = true;
       }
       const topicDatas = state.topicDatas;
       topicDatas[tab] = data;
