@@ -224,7 +224,7 @@ class Topic extends Component{
                             <span className="UserLink AuthorInfo-name">
                                 <div className="Popover">
                                     <div>
-                                        <a className="UserLink-link" href={`/people/${topic.from_uid.username}`}>烟雨江南</a>
+                                      <a className="UserLink-link" href={`/people/${topic.from_uid.username}`}>{topic.from_uid.username}</a>
                                     </div>
                                 </div>
                             </span>
