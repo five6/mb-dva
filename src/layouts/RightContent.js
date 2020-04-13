@@ -137,14 +137,14 @@ export default class GlobalHeaderRight extends PureComponent {
           <HeaderDropdown overlay={menu}>
           <span className={`${styles.action} ${styles.account}`}>
             <Avatar
-              size="small"
+              // size="small"
               className={styles.avatar}
               src={getAvatar(userInfo)}
               alt="avatar"
             />
-            <span className={styles.name}>
+            {/* <span className={styles.name}>
               个人中心
-            </span>
+            </span> */}
           </span>
           </HeaderDropdown>:
            <HeaderDropdown overlay={menuUnLogin}>
