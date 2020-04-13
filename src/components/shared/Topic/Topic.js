@@ -6,6 +6,7 @@ import Comment from './components/Comment';
 import {getAvatar} from '@/utils/common.utils';
 import { connect } from 'dva';
 import { fetchTopicReply, fetchSubReply } from '@/services/topic';
+import { getLoginUserInfo } from '@/utils/authority';
 
 class Topic extends Component{
 
@@ -61,6 +62,11 @@ class Topic extends Component{
         })
       }
     } else if(type === 'upvoteCount') {
+      const userInfo = getLoginUserInfo();
+      if(!userInfo) {
+        message.info('您尚未登录！');
+        return;
+      }
       if((onlySort === 'up' && topic.hasUpvotedCount) || (onlySort === 'down' && ! topic.hasUpvotedCount ) ) return;
       dispatch({
         type: 'topic/upvoteCount',
@@ -112,6 +118,12 @@ class Topic extends Component{
   submitReply = () => {
     const { topic, dispatch } = this.props;
     const { tempCommentContent } = this.state;
+    const userInfo = getLoginUserInfo();
+
+    if(!userInfo) {
+      message.info('您尚未登录！');
+      return;
+    }
     if(! tempCommentContent) {
       message.info('请输入内容！');
       return;

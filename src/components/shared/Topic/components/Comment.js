@@ -56,6 +56,11 @@ class Commment extends Component{
 
   onClickReply = () => {
     const {showReplyInput} = this.state;
+    const userInfo = getLoginUserInfo();
+    if(!userInfo) {
+      message.info('您尚未登录！');
+      return;
+    }
     this.setState({
       showReplyInput: !showReplyInput
     })
@@ -63,6 +68,11 @@ class Commment extends Component{
 
   onClickSubReply = () => {
     const {childrenHover} = this.state;
+    const userInfo = getLoginUserInfo();
+    if(!userInfo) {
+      message.info('您尚未登录！');
+      return;
+    }
     if(childrenHover.id) {
       this.setState({
         childrenHover: {
@@ -97,6 +107,11 @@ class Commment extends Component{
     const { topic, comment, dispatch } = this.props;
     const { content } = this.state;
     const self = this;
+    const userInfo = getLoginUserInfo();
+    if(!userInfo) {
+      message.info('您尚未登录！');
+      return;
+    }
     dispatch({
       type: 'topic/createReply',
       payload: {
@@ -121,6 +136,11 @@ class Commment extends Component{
   }
 
   onSubReplySubmit = (reply) => {
+    const userInfo = getLoginUserInfo();
+    if(!userInfo) {
+      message.info('您尚未登录！');
+      return;
+    }
     const { topic, dispatch, comment, onReplyOneComment } = this.props;
     const { subContent } = this.state;
     const self = this;
@@ -142,7 +162,6 @@ class Commment extends Component{
               showInput: false
             }
           })
-          const userInfo = getLoginUserInfo();
           const newComment = res.datas;
           newComment.from_uid  = {
             useDefaultAvatarUrl: userInfo.useDefaultAvatarUrl,
@@ -168,6 +187,7 @@ class Commment extends Component{
   render() {
     const { comment , topic} = this.props;
     const { showExtraButtons, showReplyInput , content, subContent, childrenHover} = this.state;
+    const userInfo = getLoginUserInfo();
     return(
         <ul className="NestComment">
             <li className="NestComment--rootComment">
@@ -202,7 +222,7 @@ class Commment extends Component{
                                   {comment.content}
                                 </div>
                             </div>
-                            <div style={{ display: comment.from_uid._id === getLoginUserInfo().id ? 'none': 'block' }} onMouseEnter={this.onButtonMouseEnter} onMouseLeave={this.onButtonsMouseLeave} className="CommentItemV2-footer">
+                            <div style={{ display: comment.from_uid._id === (userInfo && userInfo.id ) ? 'none': 'block' }} onMouseEnter={this.onButtonMouseEnter} onMouseLeave={this.onButtonsMouseLeave} className="CommentItemV2-footer">
                                 <button className="Button CommentItemV2-likeBtn Button--plain">
                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                     <Icon type="like" />赞
@@ -290,7 +310,7 @@ class Commment extends Component{
                                   {reply.content}
                                 </div>
                             </div>
-                            <div style={{ display: reply.from_uid._id === getLoginUserInfo().id ? 'none': 'block' }} onMouseEnter={e => this.onSubReplyButtonMouseEnter(reply._id)} className="CommentItemV2-footer">
+                            <div style={{ display: reply.from_uid._id === (userInfo && userInfo.id) ? 'none': 'block' }} onMouseEnter={e => this.onSubReplyButtonMouseEnter(reply._id)} className="CommentItemV2-footer">
                                 <button className="Button CommentItemV2-likeBtn Button--plain">
                                     <span style={{display: 'inline-flex', alignItems: 'center'}}>
                                     <Icon type="like" />赞

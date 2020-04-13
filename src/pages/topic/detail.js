@@ -36,11 +36,11 @@ class OneTopic extends Component{
 
 
   componentDidMount() {
-    const userInfo = getLoginUserInfo();
-    if(!userInfo) {
-      router.push('/login');
-      return;
-    }
+    // const userInfo = getLoginUserInfo();
+    // if(!userInfo) {
+    //   router.push('/login');
+    //   return;
+    // }
     const { location } = this.props;
     const self = this;
     fetchTopicDetail(location.pathname.split('/topics/')[1]).then(res => {
@@ -55,6 +55,7 @@ class OneTopic extends Component{
 
   onClickTopicAction = (type, onlySort, sort_time) => {
     const self = this;
+    const userInfo = getLoginUserInfo();
     const { showComment, topicDetail } = this.state;
     const {currentPage, pageSize} = self.state.commentDatas;
     const { dispatch } = this.props;
@@ -83,6 +84,10 @@ class OneTopic extends Component{
         })
       }
     } else if(type === 'upvoteCount') {
+      if(!userInfo) {
+        message.info('您尚未登录！');
+        return;
+      }
       if((onlySort === 'up' && topicDetail.hasUpvotedCount) || (onlySort === 'down' && ! topicDetail.hasUpvotedCount ) ) return;
       dispatch({
         type: 'topic/upvoteCount',
@@ -167,6 +172,10 @@ class OneTopic extends Component{
   submitReply = () => {
     const { dispatch } = this.props;
     const { tempCommentContent, topicDetail } = this.state;
+    if(!getLoginUserInfo()){
+      message.info('您尚未登录！');
+      return;
+    }
     if(! tempCommentContent) {
       message.info('请输入内容！');
       return;
@@ -272,7 +281,7 @@ class OneTopic extends Component{
                 </div>
                 <div>
                   <div className="Voters">
-                    <button onClick={() => alert('显示点赞列表')} className="Button Button--plain" >{`12人 `}赞同了该文章</button>
+                    <button onClick={() => alert('显示点赞列表')} className="Button Button--plain" >{topicDetail.upvoteCount}赞同了该文章</button>
                   </div>
                 </div>
               </header>

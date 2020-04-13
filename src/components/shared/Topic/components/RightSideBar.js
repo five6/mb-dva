@@ -21,12 +21,15 @@ class RightSideBar extends Component{
               <span className="GlobalSideBar-navText">个人信息</span>
             </a>
           </li>
-          <li className="GlobalSideBar-navItem">
-            <a className="Button GlobalSideBar-navLink right-base-navItem Button--plain">
-              <img alt={userInfo.username} style={{width: '48px', height: '48px'}} src={getAvatar(userInfo)} className="Avatar UserLink-avatar"/>
-                <span className="GlobalSideBar-navText">{userInfo.username}</span>
-            </a>
-          </li>
+          {
+            userInfo ?
+            <li className="GlobalSideBar-navItem">
+              <a className="Button GlobalSideBar-navLink right-base-navItem Button--plain">
+                <img alt={userInfo.username} style={{width: '48px', height: '48px'}} src={getAvatar(userInfo)} className="Avatar UserLink-avatar"/>
+                  <span className="GlobalSideBar-navText">{userInfo.username}</span>
+              </a>
+            </li>: null
+          }
         </ul>
         </div>
         <div className="Sticky">

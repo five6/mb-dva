@@ -3,6 +3,11 @@ import { apiPrefix } from '@/utils/api.prefix';
 import { getToken } from '@/services/authorityService';
 
 
+export async function checkUserAuthorized (data) {
+  return request(`${apiPrefix}/users/check/authorized`, {
+    method: 'GET',
+  });
+}
 
 export async function login(data) {
   return request(`${apiPrefix}/users/signin`, {

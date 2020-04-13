@@ -54,7 +54,10 @@ body {
   color: @COLOR_WHITE !important;
 }
 
+.layout.ant-layout {
+  background: none;
 
+}
 
 .ant-menu-dark .ant-menu-item > a,
 .ant-menu-submenu-title:hover {
@@ -1464,9 +1467,23 @@ body {
   position: absolute !important;
   width: 300px !important;
   float: left !important;
-  left: 500px !important;
+  left: 300px !important;
   top: 13px !important;
   background: white !important;
+}
+
+.ant-layout-footer {
+  background: none !important;
+}
+@media (max-width: 690px){
+  .top-search {
+    display: inline;
+  }
+
+  .ant-layout-footer {
+    width: 1000px !important;
+    text-align: center;
+  }
 }
 
 li {
@@ -1492,3 +1509,4 @@ h1 {
   margin-inline-end: 0px;
   font-weight: bold;
 }
+

@@ -1,4 +1,5 @@
 import { getToken } from '@/services/authorityService';
+
 import { formatMessage } from 'umi-plugin-react/locale';
 
 /**
@@ -36,15 +37,14 @@ const errorHandler = error => {
 
   // TODO 当错误信息是401, 跳转到用户登录
   if (status === 401) {
-    if(window.location.pathname !== '/login' && window.location.pathname !== 'register') {
-      window.location.href = '/login';
-    }
-  }
-
-  notification.error({
-    message: `${formatMessage({ id: 'app.request.error' })} ${status}: ${url}`,
-    description: errortext,
-  });
+    // if(window.location.pathname !== '/login' && window.location.pathname !== 'register') {
+    //   window.location.href = '/login';
+    // }
+  } else
+    notification.error({
+      message: `${formatMessage({ id: 'app.request.error' })} ${status}: ${url}`,
+      description: errortext,
+    });
 }
 
 /**

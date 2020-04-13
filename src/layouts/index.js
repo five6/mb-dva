@@ -10,6 +10,8 @@ import {
 import { connect } from 'dva';
 import router from 'umi/router';
 import { getLoginUserInfo } from '@/utils/authority';
+import { checkUserAuthorized } from '@/services/users';
+import { clearAuthority } from '@/utils/authority';
 
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
@@ -22,11 +24,16 @@ class BasicLayout extends Component {
     this.state = {
       defaultSelectedKeys: [props.location.pathname]
     }
-    const userInfo = getLoginUserInfo();
-    if(!userInfo) {
-      router.push('/login');
-      return;
-    }
+
+    if(getLoginUserInfo())
+      checkUserAuthorized().catch(res => {
+        clearAuthority();
+      })
+    // const userInfo = getLoginUserInfo();
+    // if(!userInfo) {
+    //   router.push('/login');
+    //   return;
+    // }
   }
 
   // 切换page
@@ -49,10 +56,18 @@ class BasicLayout extends Component {
       router.push('/account/center');
       return;
     }
-    if (key === 'logout') {
+    else if (key === 'logout') {
       dispatch({
         type: 'user/logout',
       });
+    }
+
+    else if (key === 'login') {
+      router.push('/login');
+    }
+
+    else if (key === 'register') {
+      router.push('/register');
     }
   };
 
@@ -84,10 +99,10 @@ class BasicLayout extends Component {
             onSelect={this.changePage}
           >
             <Menu.Item key="/">首页</Menu.Item>
-            <Menu.Item key="/good">精华</Menu.Item>
-            <Menu.Item key="/share">分享</Menu.Item>
+            <Menu.Item key="/good">专题</Menu.Item>
+            {/* <Menu.Item key="/share">分享</Menu.Item>
             <Menu.Item key="/ask">问答</Menu.Item>
-            <Menu.Item key="/job">招聘</Menu.Item>
+            <Menu.Item key="/job">招聘</Menu.Item> */}
           </Menu>
           <Search
             size="large"
