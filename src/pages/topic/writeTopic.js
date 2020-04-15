@@ -41,7 +41,7 @@ class WriteTopic extends Component{
     'modules/emoji-toolbar': QuillEmoji.ToolbarEmoji,
     'modules/emoji-shortname': QuillEmoji.ShortNameEmoji
     })
-    
+
   }
 
   getBase64 =(img, callback) => {
@@ -49,18 +49,18 @@ class WriteTopic extends Component{
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
-  
+
   beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
+    const isImg = _.startsWith(file.type, 'image/');
+    if (! isImg) {
+      message.error('你只能够上传图片文件');
     }
-    // 文件不超过2M
-    const isLt2M = file.size / 1024 / 1024 < 2;
+    // 文件不超过5M
+    const isLt2M = file.size / 1024 / 1024 <= 2;
     if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
+      message.error('图片不能大于2M');
     }
-    return isJpgOrPng && isLt2M;
+    return isImg && isLt2M;
   }
 
   handleTitleImageChange = info => {
@@ -146,13 +146,18 @@ class WriteTopic extends Component{
       input.click()
       input.onchange = async () => {
         const file = input.files[0];
+        const isLt2M = file.size / 1024 / 1024 <= 2;
+        if (!isLt2M) {
+          message.error('图片不能大于2M');
+          return;
+        }
         const formData = new FormData();
         formData.append('file', file);
         const res = await uploadFile(formData);
         const range = this.quillEditor.getSelection();
         const link = common_file_url.replace('{id}', res &&res[0] &&res[0].id);
         // this part the image is inserted
-        // by 'image' option below, you just have to put src(link) of img here. 
+        // by 'image' option below, you just have to put src(link) of img here.
         this.quillEditor.insertEmbed(range.index, 'image', link);
       }
     }
@@ -289,5 +294,5 @@ export default connect(state => {
       typeTopics: state.topic.topicDatas.all,
     }
   })(Form.create()(WriteTopic));
-  
+
 

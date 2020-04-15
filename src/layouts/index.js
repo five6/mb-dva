@@ -25,10 +25,13 @@ class BasicLayout extends Component {
       defaultSelectedKeys: [props.location.pathname]
     }
 
-    if(getLoginUserInfo())
-      checkUserAuthorized().catch(res => {
+    if(getLoginUserInfo()) {
+      checkUserAuthorized().then().catch(e => {
+        console.error(e);
         clearAuthority();
       })
+    }
+
     // const userInfo = getLoginUserInfo();
     // if(!userInfo) {
     //   router.push('/login');
