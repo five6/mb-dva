@@ -26,7 +26,9 @@ class BasicLayout extends Component {
     }
 
     if(getLoginUserInfo()) {
-      checkUserAuthorized().then().catch(e => {
+      checkUserAuthorized().then(res => {
+        console.log(res && res.msg);
+      }).catch(e => {
         console.error(e);
         clearAuthority();
       })
