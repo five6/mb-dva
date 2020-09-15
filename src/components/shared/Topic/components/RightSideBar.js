@@ -51,11 +51,11 @@ class RightSideBar extends Component{
               <div className="GlobalWrite-navTitle">草稿箱</div>
             </a>
           </div>
-          {/* <div className="Pc-card Card">
+          <div className="Pc-card Card">
               <a className="Banner-link">
                 <img src="https://pic2.zhimg.com/70/v2-35ca172745b0100c0634a095b17310e5.jpg"/>
               </a>
-          </div> */}
+          </div>
           <div className="Card">
             <ul className="GlobalSideBar-navList">
               <li className="GlobalSideBar-navItem GlobalSideBar-starItem">
